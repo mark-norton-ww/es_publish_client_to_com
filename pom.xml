@@ -88,6 +88,15 @@
                     </inclusions>
                 </configuration>
             </plugin>
+			<plugin>
+				<groupId>org.mule.tools</groupId>
+				<artifactId>maven-mule-plugin</artifactId>
+				<version>1.9</version>
+				<extensions>true</extensions>
+				<configuration>
+					<copyToAppsDirectory>true</copyToAppsDirectory>
+				</configuration>
+			</plugin>
         </plugins>
         <!-- End of APIKit plug-in -->
     </build>
