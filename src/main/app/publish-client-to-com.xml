@@ -1,0 +1,67 @@
+<mule xmlns:jdbc-ee="http://www.mulesoft.org/schema/mule/ee/jdbc"
+	xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper"
+	xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+	xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.5.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.mulesoft.org/schema/mule/ee/jdbc http://www.mulesoft.org/schema/mule/ee/jdbc/current/mule-jdbc-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<context:property-placeholder location="classpath:api.properties" />
+
+	<jms:activemq-connector name="Active_MQ"
+		username="${activemq.user}" password="${activemq.password}" brokerURL="tcp://${activemq.host}:${activemq.port}"
+		validateConnections="true" doc:name="Active MQ"></jms:activemq-connector>
+	
+	<db:generic-config name="Oracle_Database_Configuration"
+		url="${oracle.db.url}:${oracle.db.username}/${oracle.db.password}@${oracle.db.host}:${oracle.db.port}:${oracle.db.sid}" driverClassName="oracle.jdbc.driver.OracleDriver"
+		doc:name="Generic Database Configuration"></db:generic-config>
+
+	<data-mapper:config name="JSON_To_Map_1"
+		transformationGraphPath="json_to_map_1.grf" doc:name="JSON_To_Map_1" />
+	<flow name="publishClientToComFlow" doc:name="publishClientToComFlow"
+		processingStrategy="synchronous">
+		<jms:inbound-endpoint topic="${activemq.topic.name}"
+			connector-ref="Active_MQ" doc:name="Topic.PublishClient"></jms:inbound-endpoint>
+		<set-variable variableName="inputJson" value="#[payload]"
+			doc:name="Store Json message into Variable"></set-variable>
+
+		<db:select config-ref="Oracle_Database_Configuration"
+			doc:name="Checks Client Id Exists Or Not">
+            <db:parameterized-query><![CDATA[select corp_wellness_id from CORP_WELLNESS where work_id=#[json:Client/ClientId]]]></db:parameterized-query>
+		</db:select>
+
+		<flow-ref name="prepareDataForStoredProcedure" doc:name="Prepare Data for Stored Procedure"></flow-ref>
+		<flow-ref name="callStoredProcedure" doc:name="Call Stored Procedure"></flow-ref>
+		<catch-exception-strategy doc:name="Catch Exception Strategy">
+			<logger level="ERROR" doc:name="Log Exception"
+				message="Exception occured in Publish Client to COM : #[exception.cause.message]"></logger>
+		</catch-exception-strategy>
+	</flow>
+	<sub-flow name="prepareDataForStoredProcedure" doc:name="prepareDataForStoredProcedure">
+		<set-variable variableName="corp_wellness_id"
+			value="#[payload.size() &gt; 0 ? payload[0]['corp_wellness_id'] : null]"
+			doc:name="Store corp_wellness_id" />
+		<set-payload value="#[inputJson]" doc:name="getting json message from variable" />
+		<data-mapper:transform config-ref="JSON_To_Map_1"
+			doc:name="JSON To Map" />
+	</sub-flow>
+	<sub-flow name="callStoredProcedure" doc:name="callStoredProcedure">
+        <db:stored-procedure config-ref="Oracle_Database_Configuration" doc:name="Invoke Pkg_Admin_Program.p_insupd_corp_wellness">
+            <db:parameterized-query><![CDATA[call Pkg_Admin_Program.p_insupd_corp_wellness(#[p_corp_wellness_id],NULL,#[p_corprate_name],#[p_work_id],#[p_page],NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,1)]]></db:parameterized-query>
+            <db:in-param name="p_corp_wellness_id" type="INTEGER" value="#[variable:corp_wellness_id?]"/>
+            <db:in-param name="p_corprate_name" value="#[payload['p_corprate_name']]"/>
+            <db:in-param name="p_work_id" value="#[payload['p_work_id']]"/>
+            <db:in-param name="p_page_id" value="#[payload['p_page_id']]"/>
+        </db:stored-procedure>
+	</sub-flow>
+</mule>

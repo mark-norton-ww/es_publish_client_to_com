@@ -12,11 +12,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <mule.version>3.5.0-M4</mule.version>
+        <mule.version>3.5.0</mule.version>
         <mule.appkit.version>3.4</mule.appkit.version>
         <eclipsePluginVersion>2.8</eclipsePluginVersion>
         <vmtype>org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType</vmtype>
-        <jdkName>JavaSE-1.6</jdkName>
+        <jdkName>JavaSE-1.7</jdkName>
         <jdk.version>1.7</jdk.version>
         <junit.version>4.10</junit.version>
         <apikit.version>1.2</apikit.version>
@@ -72,7 +72,7 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
+         <plugin>
                 <groupId>org.mule.tools.appkit</groupId>
                 <artifactId>mule-appkit-maven-plugin</artifactId>
                 <version>${mule.appkit.version}</version>
@@ -169,5 +169,16 @@
             <version>${rest.assured.version}</version>
             <scope>test</scope>
         </dependency>
+		
+	<dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-client</artifactId>
+      <version>[5.9,)</version>
+   </dependency>
+    <dependency>
+      <groupId>com.oracle</groupId>
+     <artifactId>ojdbc6</artifactId>
+     <version>[11.2,)</version>
+   </dependency>
     </dependencies>
 </project>

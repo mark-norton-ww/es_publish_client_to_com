@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="publish-client-to-com">
+    <global-element name="Property Placeholder" type="http://www.springframework.org/schema/context/property-placeholder" entity-id="Property Placeholder#1">
+        <properties>
+            <property name="properties-ref"/>
+            <property name="order"/>
+            <property name="location" value="classpath:api.properties"/>
+            <property name="local-override"/>
+            <property name="system-properties-mode"/>
+            <property name="file-encoding"/>
+            <property name="ignore-resource-not-found"/>
+            <property name="ignore-unresolvable"/>
+            <property name="auxiliary;index" value="1"/>
+        </properties>
+    </global-element>
+    <global-element name="Active MQ" type="org.mule.tooling.ui.modules.core.global.activemq.config" entity-id="Active MQ#1">
+        <properties>
+            <property name="jndiProviderUrl"/>
+            <property name="redeliveryHandlerFactory-ref"/>
+            <property name="embeddedMode"/>
+            <property name="durable"/>
+            <property name="maxRedelivery"/>
+            <property name="connectionFactory-ref"/>
+            <property name="password" value="${activemq.password}"/>
+            <property name="username" value="${activemq.user}"/>
+            <property name="name" value="Active_MQ"/>
+            <property name="dynamicNotification"/>
+            <property name="noLocal"/>
+            <property name="auxiliary;index" value="2"/>
+            <property name="eagerConsumer"/>
+            <property name="numberOfConsumers"/>
+            <property name="acknowledgementMode"/>
+            <property name="jndiInitialFactory"/>
+            <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/jms/activemq-connector"/>
+            <property name="validateConnections" value="true"/>
+            <property name="disableTemporaryReplyToDestinations"/>
+            <property name="clientId"/>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="persistentDelivery"/>
+            <property name="forceJndiDestinations"/>
+            <property name="specification"/>
+            <property name="brokerURL" value="tcp://${activemq.host}:${activemq.port}"/>
+            <property name="connectionFactoryJndiName"/>
+            <property name="jndiDestinations"/>
+            <property name="honorQosHeaders"/>
+            <property name="cacheJmsSessions"/>
+            <property name="jndiProviderProperties-ref"/>
+        </properties>
+    </global-element>
+    <global-element name="Generic Database Configuration" type="http://www.mulesoft.org/schema/mule/db/generic-config" entity-id="Generic Database Configuration#1">
+        <properties>
+            <property name="dataSource-ref"/>
+            <property name="name" value="Oracle_Database_Configuration"/>
+            <property name="springBeanConf"/>
+            <property name="auxiliary;metauseMetaData" value="true"/>
+            <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+            <property name="useXaTransactions"/>
+            <property name="databaseURLConf"/>
+            <property name="parameterTable"/>
+            <property name="url" value="${oracle.db.url}:${oracle.db.username}/${oracle.db.password}@${oracle.db.host}:${oracle.db.port}:${oracle.db.sid}"/>
+            <property name="auxiliary;index" value="3"/>
+        </properties>
+    </global-element>
+    <global-element name="JSON_To_Map_1" type="http://www.mulesoft.org/schema/mule/ee/data-mapper/config" entity-id="DataMapper#1">
+        <properties>
+            <property name="name" value="JSON_To_Map_1"/>
+            <property name="transformationGraphPath" value="json_to_map_1.grf"/>
+            <property name="auxiliary;index" value="4"/>
+        </properties>
+    </global-element>
+    <flow SubFlow="false" name="publishClientToComFlow" type="http://www.mulesoft.org/schema/mule/core/flow" entity-id="d8dade44-1394-4d14-be6c-7a9e350d9940">
+        <properties>
+            <property name="initialState"/>
+            <property name="processingStrategy2" value="synchronous"/>
+            <property name="processingStrategy" value="synchronous"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="tracking:enable-default-events"/>
+            <property name="auxiliary;index" value="5"/>
+        </properties>
+        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#1">
+            <graphicalData x="0" y="0" width="0" height="0"/>
+            <endpoint direction="Inbound" name="Topic.PublishClient" type="http://www.mulesoft.org/schema/mule/jms/endpoint" entity-id="JMS#1">
+                <graphicalData x="21" y="42" width="103" height="67"/>
+                <properties>
+                    <property name="topic" value="${activemq.topic.name}"/>
+                    <property name="queue"/>
+                    <property name="durableName"/>
+                    <property name="businessEventsLabel"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="disableTemporaryReplyToDestinations"/>
+                    <property name="exchange-pattern"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="responseTimeout"/>
+                    <property name="mimeType"/>
+                    <property name="auxiliary;index" value="6"/>
+                    <property name="connector-ref" value="Active_MQ"/>
+                </properties>
+            </endpoint>
+            <pattern name="Store Json message into Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#1">
+                <graphicalData x="332" y="29" width="77" height="93"/>
+                <properties>
+                    <property name="variableName" value="inputJson"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+                    <property name="value" value="#[payload]"/>
+                    <property name="auxiliary;index" value="8"/>
+                </properties>
+            </pattern>
+            <pattern name="Checks Client Id Exists Or Not" type="http://www.mulesoft.org/schema/mule/db/database-connector" entity-id="Database#1">
+                <graphicalData x="469" y="35" width="91" height="80"/>
+                <properties>
+                    <property name=""/>
+                    <property name="streaming"/>
+                    <property name="fetchSize"/>
+                    <property name="source"/>
+                    <property name="transactionalAction"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/db/select"/>
+                    <property name="maxRows"/>
+                    <property name="target"/>
+                    <property name="config-ref" value="Oracle_Database_Configuration"/>
+                    <property name="auxiliary;index" value="9"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/db/parameterized-query;0">
+                        <property name="text" value="select corp_wellness_id from CORP_WELLNESS where work_id=#[json:Client/ClientId]"/>
+                        <property name="auxiliary;wrapIn" value="10"/>
+                        <property name="auxiliary;index" value="10"/>
+                    </property-collection>
+                </properties>
+            </pattern>
+            <pattern name="Prepare Data for Stored Procedure" type="http://www.mulesoft.org/schema/mule/core/flow-ref" entity-id="Flow Reference#1">
+                <graphicalData x="620" y="35" width="98" height="80"/>
+                <properties>
+                    <property name="name" value="prepareDataForStoredProcedure"/>
+                    <property name="auxiliary;index" value="11"/>
+                </properties>
+            </pattern>
+            <pattern name="Call Stored Procedure" type="http://www.mulesoft.org/schema/mule/core/flow-ref" entity-id="Flow Reference#2">
+                <graphicalData x="778" y="35" width="69" height="80"/>
+                <properties>
+                    <property name="name" value="callStoredProcedure"/>
+                    <property name="auxiliary;index" value="12"/>
+                </properties>
+            </pattern>
+            <scope name="Catch Exception Strategy" type="http://www.mulesoft.org/schema/mule/core/catch-exception-strategy" entity-id="Catch Exception Strategy#1">
+                <properties>
+                    <property name="labelConfigureConditionalExecutionUsingExpression"/>
+                    <property name="when"/>
+                    <property name="enableNotifications"/>
+                    <property name="auxiliary;index" value="13"/>
+                </properties>
+                <compartment entity-id="compartment#1">
+                    <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#2">
+                        <pattern name="Log Exception" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#1">
+                            <graphicalData x="0" y="0" width="0" height="0"/>
+                            <properties>
+<property name="message" value="Exception occured in Publish Client to COM : #[exception.cause.message]"/>
+<property name="category"/>
+<property name="level" value="ERROR"/>
+<property name="auxiliary;index" value="14"/>
+                            </properties>
+                        </pattern>
+                    </lane>
+                </compartment>
+            </scope>
+        </lane>
+    </flow>
+    <flow SubFlow="true" name="prepareDataForStoredProcedure" type="http://www.mulesoft.org/schema/mule/core/subflow" entity-id="1fa4832b-1e6c-402f-a702-d942153ef6eb">
+        <properties>
+            <property name="initialState"/>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="tracking:enable-default-events"/>
+            <property name="auxiliary;index" value="15"/>
+        </properties>
+        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#3">
+            <graphicalData x="0" y="0" width="0" height="0"/>
+            <pattern name="Store corp_wellness_id" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#2">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="variableName" value="corp_wellness_id"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+                    <property name="value" value="#[payload.size() &gt; 0 ? payload[0]['corp_wellness_id'] : null]"/>
+                    <property name="auxiliary;index" value="16"/>
+                </properties>
+            </pattern>
+            <pattern name="getting json message from variable" type="http://www.mulesoft.org/schema/mule/core/set-payload" entity-id="Set Payload#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="value" value="#[inputJson]"/>
+                    <property name="auxiliary;index" value="17"/>
+                </properties>
+            </pattern>
+            <pattern name="JSON To Map" type="http://www.mulesoft.org/schema/mule/ee/data-mapper/data-mapper-connector" entity-id="DataMapper#2">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="returnClass"/>
+                    <property name="input-ref"/>
+                    <property name="stream"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/ee/data-mapper/transform"/>
+                    <property name="target"/>
+                    <property name="config-ref" value="JSON_To_Map_1"/>
+                    <property name="pipeSize"/>
+                    <property name="auxiliary;index" value="18"/>
+                </properties>
+            </pattern>
+        </lane>
+    </flow>
+    <flow SubFlow="true" name="callStoredProcedure" type="http://www.mulesoft.org/schema/mule/core/subflow" entity-id="704a7216-8bdc-4757-9cc3-424f66b976af">
+        <properties>
+            <property name="initialState"/>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="tracking:enable-default-events"/>
+            <property name="auxiliary;index" value="19"/>
+        </properties>
+        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#4">
+            <graphicalData x="0" y="0" width="0" height="0"/>
+            <pattern name="Invoke Pkg_Admin_Program.p_insupd_corp_wellness" type="http://www.mulesoft.org/schema/mule/db/database-connector" entity-id="Database#2">
+                <graphicalData x="173" y="440" width="232" height="80"/>
+                <properties>
+                    <property name=""/>
+                    <property name="streaming"/>
+                    <property name="fetchSize"/>
+                    <property name="source"/>
+                    <property name="transactionalAction"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/db/stored-procedure"/>
+                    <property name="target"/>
+                    <property name="config-ref" value="Oracle_Database_Configuration"/>
+                    <property name="auxiliary;index" value="21"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/db/in-param;0">
+                        <property name="name" value="p_corp_wellness_id"/>
+                        <property name="value" value="#[variable:corp_wellness_id?]"/>
+                        <property name="type" value="INTEGER"/>
+                        <property name="auxiliary;wrapIn" value="23"/>
+                        <property name="auxiliary;index" value="23"/>
+                    </property-collection>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/db/in-param;1">
+                        <property name="name" value="p_corprate_name"/>
+                        <property name="value" value="#[payload['p_corprate_name']]"/>
+                        <property name="auxiliary;wrapIn" value="24"/>
+                        <property name="auxiliary;index" value="24"/>
+                    </property-collection>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/db/in-param;2">
+                        <property name="name" value="p_work_id"/>
+                        <property name="value" value="#[payload['p_work_id']]"/>
+                        <property name="auxiliary;wrapIn" value="25"/>
+                        <property name="auxiliary;index" value="25"/>
+                    </property-collection>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/db/in-param;3">
+                        <property name="name" value="p_page_id"/>
+                        <property name="value" value="#[payload['p_page_id']]"/>
+                        <property name="auxiliary;wrapIn" value="26"/>
+                        <property name="auxiliary;index" value="26"/>
+                    </property-collection>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/db/parameterized-query;0">
+                        <property name="text" value="call Pkg_Admin_Program.p_insupd_corp_wellness(#[p_corp_wellness_id],NULL,#[p_corprate_name],#[p_work_id],#[p_page],NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,1)"/>
+                        <property name="auxiliary;wrapIn" value="22"/>
+                        <property name="auxiliary;index" value="22"/>
+                    </property-collection>
+                </properties>
+            </pattern>
+        </lane>
+    </flow>
+</mule-configuration>
