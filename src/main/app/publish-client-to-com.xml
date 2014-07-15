@@ -23,42 +23,42 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 		validateConnections="true" doc:name="Active MQ"></jms:activemq-connector>
 	
 	<db:generic-config name="Oracle_Database_Configuration"
-		url="${oracle.db.url}:${oracle.db.username}/${oracle.db.password}@${oracle.db.host}:${oracle.db.port}:${oracle.db.sid}" driverClassName="oracle.jdbc.driver.OracleDriver"
+		url="jdbc:oracle:thin:${oracle.db.username}/${oracle.db.password}@${oracle.db.host}:${oracle.db.port}:${oracle.db.sid}" driverClassName="oracle.jdbc.driver.OracleDriver"
 		doc:name="Generic Database Configuration"></db:generic-config>
 
-	<data-mapper:config name="JSON_To_Map_1"
-		transformationGraphPath="json_to_map_1.grf" doc:name="JSON_To_Map_1" />
+	<data-mapper:config name="Proc_param_map"
+		transformationGraphPath="json_to_map_1.grf" doc:name="Proc_param_map" />
+		
 	<flow name="publishClientToComFlow" doc:name="publishClientToComFlow"
 		processingStrategy="synchronous">
 		<jms:inbound-endpoint topic="${activemq.topic.name}"
 			connector-ref="Active_MQ" doc:name="Topic.PublishClient"></jms:inbound-endpoint>
+			
 		<set-variable variableName="inputJson" value="#[payload]"
-			doc:name="Store Json message into Variable"></set-variable>
+			doc:name="Store original input"></set-variable>
 
-		<db:select config-ref="Oracle_Database_Configuration"
-			doc:name="Checks Client Id Exists Or Not">
-            <db:parameterized-query><![CDATA[select corp_wellness_id from CORP_WELLNESS where work_id=#[json:Client/ClientId]]]></db:parameterized-query>
-		</db:select>
-
-		<flow-ref name="prepareDataForStoredProcedure" doc:name="Prepare Data for Stored Procedure"></flow-ref>
+		<flow-ref name="getClientIdFromCom" doc:name="Prepare Data for Stored Procedure"></flow-ref>
 		<flow-ref name="callStoredProcedure" doc:name="Call Stored Procedure"></flow-ref>
 		<catch-exception-strategy doc:name="Catch Exception Strategy">
 			<logger level="ERROR" doc:name="Log Exception"
 				message="Exception occured in Publish Client to COM : #[exception.cause.message]"></logger>
 		</catch-exception-strategy>
 	</flow>
-	<sub-flow name="prepareDataForStoredProcedure" doc:name="prepareDataForStoredProcedure">
+	<sub-flow name="getClientIdFromCom" doc:name="getClientIdFromCom">
+        <db:select config-ref="Oracle_Database_Configuration" doc:name="Checks Client Id Exists Or Not">
+            <db:parameterized-query><![CDATA[select corp_wellness_id from CORP_WELLNESS where work_id=#[json:Client/ClientId]]]></db:parameterized-query>
+        </db:select>
 		<set-variable variableName="corp_wellness_id"
 			value="#[payload.size() &gt; 0 ? payload[0]['corp_wellness_id'] : null]"
 			doc:name="Store corp_wellness_id" />
-		<set-payload value="#[inputJson]" doc:name="getting json message from variable" />
-		<data-mapper:transform config-ref="JSON_To_Map_1"
-			doc:name="JSON To Map" />
 	</sub-flow>
 	<sub-flow name="callStoredProcedure" doc:name="callStoredProcedure">
+        <set-payload value="#[inputJson]" doc:name="Set original input" />
+        <data-mapper:transform config-ref="Proc_param_map"
+			doc:name="Map to SP parameters" />
         <db:stored-procedure config-ref="Oracle_Database_Configuration" doc:name="Invoke Pkg_Admin_Program.p_insupd_corp_wellness">
             <db:parameterized-query><![CDATA[call Pkg_Admin_Program.p_insupd_corp_wellness(#[p_corp_wellness_id],NULL,#[p_corprate_name],#[p_work_id],#[p_page],NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,1)]]></db:parameterized-query>
-            <db:in-param name="p_corp_wellness_id" type="INTEGER" value="#[variable:corp_wellness_id?]"/>
+            <db:in-param name="p_corp_wellness_id" type="INTEGER" value="#[flowVars['corp_wellness_id']]"/>
             <db:in-param name="p_corprate_name" value="#[payload['p_corprate_name']]"/>
             <db:in-param name="p_work_id" value="#[payload['p_work_id']]"/>
             <db:in-param name="p_page_id" value="#[payload['p_page_id']]"/>
