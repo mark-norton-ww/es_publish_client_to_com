@@ -13,76 +13,221 @@
             <property name="ignore-resource-not-found"/>
         </properties>
     </global-element>
+    <global-element name="Bean" type="http://www.springframework.org/schema/beans/bean" entity-id="Bean#1">
+        <properties>
+            <property name="factory-bean"/>
+            <property name="abstract"/>
+            <property name="scope"/>
+            <property name="init-method"/>
+            <property name="autowire-candidate"/>
+            <property name="factory-method"/>
+            <property name="class" value="org.apache.activemq.RedeliveryPolicy"/>
+            <property name="parent"/>
+            <property name="children"/>
+            <property name="lazy-init"/>
+            <property name="auxiliary;wrappedIn" value="beans@spring@http://www.springframework.org/schema/beans"/>
+            <property name="id" value="redeliveryPolicy"/>
+            <property name="name" value="redeliveryPolicy"/>
+            <property name="primary"/>
+            <property name="autowire"/>
+            <property name="destroy-method"/>
+            <property name="auxiliary;wrapIn" value="2"/>
+            <property name="auxiliary;index" value="3"/>
+            <property name="depends-on"/>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;0">
+                <property name="name" value="maximumRedeliveries"/>
+                <property name="value" value="-1"/>
+                <property name="auxiliary;index" value="4"/>
+                <property name="auxiliary;wrapIn" value="4"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;1">
+                <property name="name" value="initialRedeliveryDelay"/>
+                <property name="value" value="1000"/>
+                <property name="auxiliary;index" value="5"/>
+                <property name="auxiliary;wrapIn" value="5"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;2">
+                <property name="name" value="redeliveryDelay"/>
+                <property name="value" value="1000"/>
+                <property name="auxiliary;index" value="6"/>
+                <property name="auxiliary;wrapIn" value="6"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;3">
+                <property name="name" value="maximumRedeliveryDelay"/>
+                <property name="value" value="30000"/>
+                <property name="auxiliary;index" value="7"/>
+                <property name="auxiliary;wrapIn" value="7"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;4">
+                <property name="name" value="useExponentialBackOff"/>
+                <property name="value" value="true"/>
+                <property name="auxiliary;index" value="8"/>
+                <property name="auxiliary;wrapIn" value="8"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;5">
+                <property name="name" value="backOffMultiplier"/>
+                <property name="value" value="4"/>
+                <property name="auxiliary;index" value="9"/>
+                <property name="auxiliary;wrapIn" value="9"/>
+            </property-collection>
+        </properties>
+    </global-element>
+    <global-element name="Bean" type="http://www.springframework.org/schema/beans/bean" entity-id="Bean#2">
+        <properties>
+            <property name="factory-bean"/>
+            <property name="abstract"/>
+            <property name="scope"/>
+            <property name="init-method"/>
+            <property name="autowire-candidate"/>
+            <property name="factory-method"/>
+            <property name="class" value="org.apache.activemq.ActiveMQConnectionFactory"/>
+            <property name="parent"/>
+            <property name="children"/>
+            <property name="lazy-init" value="true"/>
+            <property name="auxiliary;wrappedIn" value="beans@spring@http://www.springframework.org/schema/beans"/>
+            <property name="id" value="amqFactory"/>
+            <property name="name" value="amqFactory"/>
+            <property name="primary"/>
+            <property name="autowire"/>
+            <property name="destroy-method"/>
+            <property name="auxiliary;wrapIn" value="2"/>
+            <property name="auxiliary;index" value="10"/>
+            <property name="depends-on"/>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;0">
+                <property name="name" value="brokerURL"/>
+                <property name="value" value="failover:(tcp://${activemq.host}:${activemq.port})"/>
+                <property name="auxiliary;index" value="11"/>
+                <property name="auxiliary;wrapIn" value="11"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;1">
+                <property name="ref" value="redeliveryPolicy"/>
+                <property name="name" value="redeliveryPolicy"/>
+                <property name="auxiliary;index" value="12"/>
+                <property name="auxiliary;wrapIn" value="12"/>
+            </property-collection>
+        </properties>
+    </global-element>
+    <global-element name="Bean" type="http://www.springframework.org/schema/beans/bean" entity-id="Bean#3">
+        <properties>
+            <property name="factory-bean"/>
+            <property name="abstract"/>
+            <property name="scope"/>
+            <property name="init-method"/>
+            <property name="autowire-candidate"/>
+            <property name="factory-method"/>
+            <property name="class" value="org.enhydra.jdbc.standard.StandardDataSource"/>
+            <property name="parent"/>
+            <property name="children"/>
+            <property name="lazy-init"/>
+            <property name="auxiliary;wrappedIn" value="beans@spring@http://www.springframework.org/schema/beans"/>
+            <property name="id" value="jdbcDataSource"/>
+            <property name="name"/>
+            <property name="primary"/>
+            <property name="autowire"/>
+            <property name="destroy-method" value="shutdown"/>
+            <property name="auxiliary;wrapIn" value="2"/>
+            <property name="auxiliary;index" value="13"/>
+            <property name="depends-on"/>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;0">
+                <property name="name" value="driverName"/>
+                <property name="value" value="oracle.jdbc.driver.OracleDriver"/>
+                <property name="auxiliary;index" value="14"/>
+                <property name="auxiliary;wrapIn" value="14"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;1">
+                <property name="name" value="url"/>
+                <property name="value" value="${oracle.db.url}"/>
+                <property name="auxiliary;index" value="15"/>
+                <property name="auxiliary;wrapIn" value="15"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;2">
+                <property name="name" value="user"/>
+                <property name="value" value="${oracle.db.username}"/>
+                <property name="auxiliary;index" value="16"/>
+                <property name="auxiliary;wrapIn" value="16"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;3">
+                <property name="name" value="password"/>
+                <property name="value" value="${oracle.db.password}"/>
+                <property name="auxiliary;index" value="17"/>
+                <property name="auxiliary;wrapIn" value="17"/>
+            </property-collection>
+        </properties>
+    </global-element>
     <global-element name="Active MQ" type="org.mule.tooling.ui.modules.core.global.activemq.config" entity-id="Active MQ#1">
         <properties>
             <property name="jndiProviderUrl"/>
             <property name="embeddedMode"/>
             <property name="redeliveryHandlerFactory-ref"/>
-            <property name="connectionFactory-ref"/>
-            <property name="maxRedelivery"/>
-            <property name="durable"/>
+            <property name="connectionFactory-ref" value="amqFactory"/>
+            <property name="maxRedelivery" value="-1"/>
+            <property name="durable" value="true"/>
             <property name="password" value="${activemq.password}"/>
             <property name="username" value="${activemq.user}"/>
             <property name="name" value="Active_MQ"/>
             <property name="dynamicNotification"/>
             <property name="noLocal"/>
-            <property name="auxiliary;index" value="2"/>
+            <property name="auxiliary;index" value="18"/>
             <property name="eagerConsumer"/>
-            <property name="numberOfConsumers"/>
+            <property name="numberOfConsumers" value="2"/>
             <property name="acknowledgementMode"/>
             <property name="jndiInitialFactory"/>
             <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/jms/activemq-connector"/>
             <property name="validateConnections" value="true"/>
             <property name="disableTemporaryReplyToDestinations"/>
-            <property name="clientId"/>
+            <property name="clientId" value="Consumer.PublishClientToCom.VirtualTopic.PublishClient"/>
             <property name="dispatcherPoolFactory-ref"/>
             <property name="persistentDelivery"/>
             <property name="forceJndiDestinations"/>
             <property name="connectionFactoryJndiName"/>
-            <property name="brokerURL" value="tcp://${activemq.host}:${activemq.port}"/>
-            <property name="specification"/>
+            <property name="brokerURL"/>
+            <property name="specification" value="1.1"/>
             <property name="jndiDestinations"/>
             <property name="honorQosHeaders"/>
             <property name="cacheJmsSessions"/>
             <property name="jndiProviderProperties-ref"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/core/reconnect-forever;0">
+                <property name="auxiliary;index" value="19"/>
+                <property name="auxiliary;wrapIn" value="19"/>
+            </property-collection>
         </properties>
     </global-element>
     <global-element name="Generic Database Configuration" type="http://www.mulesoft.org/schema/mule/db/generic-config" entity-id="Generic Database Configuration#1">
         <properties>
-            <property name="dataSource-ref"/>
+            <property name="dataSource-ref" value="jdbcDataSource"/>
             <property name="auxiliary;metauseMetaData" value="true"/>
             <property name="springBeanConf"/>
             <property name="name" value="Oracle_Database_Configuration"/>
-            <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+            <property name="driverClassName"/>
             <property name="useXaTransactions"/>
             <property name="parameterTable"/>
             <property name="databaseURLConf"/>
-            <property name="auxiliary;index" value="3"/>
-            <property name="url" value="jdbc:oracle:thin:${oracle.db.username}/${oracle.db.password}@${oracle.db.host}:${oracle.db.port}:${oracle.db.sid}"/>
+            <property name="auxiliary;index" value="20"/>
+            <property name="url"/>
         </properties>
     </global-element>
     <global-element name="Proc_param_map" type="http://www.mulesoft.org/schema/mule/ee/data-mapper/config" entity-id="DataMapper#1">
         <properties>
             <property name="name" value="Proc_param_map"/>
-            <property name="auxiliary;index" value="4"/>
+            <property name="auxiliary;index" value="21"/>
             <property name="transformationGraphPath" value="json_to_map_1.grf"/>
         </properties>
     </global-element>
-    <flow SubFlow="false" name="publishClientToComFlow" type="http://www.mulesoft.org/schema/mule/core/flow" entity-id="8bcbb8b1-a60c-4355-a89f-214cb0d47655">
+    <flow SubFlow="false" name="publishClientToComFlow" type="http://www.mulesoft.org/schema/mule/core/flow" entity-id="c06f030a-20b3-41c0-97cf-641c7547c016">
         <properties>
             <property name="initialState"/>
             <property name="processingStrategy2" value="synchronous"/>
             <property name="processingStrategy" value="synchronous"/>
             <property name="bussinessEventsLabel"/>
             <property name="tracking:enable-default-events"/>
-            <property name="auxiliary;index" value="5"/>
+            <property name="auxiliary;index" value="22"/>
         </properties>
         <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#1">
             <graphicalData x="0" y="0" width="0" height="0"/>
-            <endpoint direction="Inbound" name="Topic.PublishClient" type="http://www.mulesoft.org/schema/mule/jms/endpoint" entity-id="JMS#1">
+            <endpoint direction="Inbound" name="From publish client topic" type="http://www.mulesoft.org/schema/mule/jms/endpoint" entity-id="JMS#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
-                    <property name="topic" value="${activemq.topic.name}"/>
+                    <property name="topic" value="VirtualTopic.PublishClient"/>
                     <property name="queue"/>
                     <property name="durableName"/>
                     <property name="businessEventsLabel"/>
@@ -95,10 +240,15 @@
                     <property name="address"/>
                     <property name="encoding"/>
                     <property name="responseTransformer-refs"/>
-                    <property name="auxiliary;index" value="6"/>
+                    <property name="auxiliary;index" value="23"/>
                     <property name="mimeType"/>
                     <property name="responseTimeout"/>
                     <property name="connector-ref" value="Active_MQ"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/jms/transaction;0">
+                        <property name="action" value="ALWAYS_BEGIN"/>
+                        <property name="auxiliary;index" value="24"/>
+                        <property name="auxiliary;wrapIn" value="24"/>
+                    </property-collection>
                 </properties>
             </endpoint>
             <pattern name="Store original input" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#1">
@@ -107,56 +257,145 @@
                     <property name="variableName" value="inputJson"/>
                     <property name="value" value="#[payload]"/>
                     <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
-                    <property name="auxiliary;index" value="7"/>
+                    <property name="auxiliary;index" value="25"/>
+                </properties>
+            </pattern>
+            <pattern name="Received" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="message" value="[#[message.id]] Client received: #[json:Client/ClientId]"/>
+                    <property name="category"/>
+                    <property name="level" value="INFO"/>
+                    <property name="auxiliary;index" value="26"/>
                 </properties>
             </pattern>
             <pattern name="Prepare Data for Stored Procedure" type="http://www.mulesoft.org/schema/mule/core/flow-ref" entity-id="Flow Reference#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="name" value="getClientIdFromCom"/>
-                    <property name="auxiliary;index" value="8"/>
+                    <property name="auxiliary;index" value="27"/>
                 </properties>
             </pattern>
             <pattern name="Call Stored Procedure" type="http://www.mulesoft.org/schema/mule/core/flow-ref" entity-id="Flow Reference#2">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="name" value="callStoredProcedure"/>
-                    <property name="auxiliary;index" value="9"/>
+                    <property name="auxiliary;index" value="28"/>
                 </properties>
             </pattern>
-            <scope name="Catch Exception Strategy" type="http://www.mulesoft.org/schema/mule/core/catch-exception-strategy" entity-id="Catch Exception Strategy#1">
+            <scope name="Choice Exception Strategy" type="http://www.mulesoft.org/schema/mule/core/choice-exception-strategy" entity-id="Choice Exception Strategy#1">
                 <properties>
-                    <property name="labelConfigureConditionalExecutionUsingExpression"/>
-                    <property name="when"/>
-                    <property name="enableNotifications"/>
-                    <property name="auxiliary;index" value="10"/>
+                    <property name="auxiliary;index" value="29"/>
                 </properties>
                 <compartment entity-id="compartment#1">
                     <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#2">
-                        <pattern name="Log Exception" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#1">
+                        <scope name="Rollback Exception Strategy" type="http://www.mulesoft.org/schema/mule/core/rollback-exception-strategy" entity-id="Rollback Exception Strategy#1">
                             <graphicalData x="0" y="0" width="0" height="0"/>
                             <properties>
-<property name="message" value="Exception occured in Publish Client to COM : #[exception.cause.message]"/>
-<property name="category"/>
-<property name="level" value="ERROR"/>
-<property name="auxiliary;index" value="11"/>
+<property name="maxRedeliveryAttempts"/>
+<property name="when" value="#[exception.getCauseException().toString().toLowerCase().contains('cannot get connection')]"/>
+<property name="enableNotifications"/>
+<property name="auxiliary;index" value="30"/>
                             </properties>
-                        </pattern>
+                            <compartment entity-id="compartment#2">
+<lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#3">
+    <scope name="Default" type="http://www.mulesoft.org/schema/mule/core/!" entity-id="Default#1">
+        <graphicalData x="0" y="0" width="0" height="0"/>
+        <properties/>
+        <compartment entity-id="compartment#3">
+            <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#4">
+                <pattern name="CONN: Retry" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#2">
+                    <graphicalData x="0" y="0" width="0" height="0"/>
+                    <properties>
+                        <property name="message" value="[#[message.id]] Connection error - message will be retried. #[exception]"/>
+                        <property name="category" value="connection.publish-client-to-com"/>
+                        <property name="level" value="WARN"/>
+                        <property name="auxiliary;index" value="31"/>
+                    </properties>
+                </pattern>
+            </lane>
+        </compartment>
+    </scope>
+    <scope name="Redelivery exhausted" type="http://www.mulesoft.org/schema/mule/core/on-redelivery-attempts-exceeded" entity-id="Redelivery exhausted#1">
+        <graphicalData x="0" y="0" width="0" height="0"/>
+        <properties/>
+        <compartment/>
+    </scope>
+</lane>
+                            </compartment>
+                        </scope>
+                        <scope name="Catch Exception Strategy" type="http://www.mulesoft.org/schema/mule/core/catch-exception-strategy" entity-id="Catch Exception Strategy#1">
+                            <graphicalData x="0" y="0" width="0" height="0"/>
+                            <properties>
+<property name="labelConfigureConditionalExecutionUsingExpression"/>
+<property name="when"/>
+<property name="enableNotifications"/>
+<property name="auxiliary;index" value="32"/>
+                            </properties>
+                            <compartment entity-id="compartment#5">
+<lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#5">
+    <pattern name="Original input" type="http://www.mulesoft.org/schema/mule/core/set-payload" entity-id="Set Payload#1">
+        <graphicalData x="0" y="0" width="0" height="0"/>
+        <properties>
+            <property name="value" value="#[flowVars[&quot;inputJson&quot;]]"/>
+            <property name="auxiliary;index" value="33"/>
+        </properties>
+    </pattern>
+    <pattern name="Clear variables" type="http://www.mulesoft.org/schema/mule/scripting/groovyComponent" entity-id="Groovy#1">
+        <graphicalData x="0" y="0" width="0" height="0"/>
+        <properties>
+            <property name="script-ref"/>
+            <property name="auxiliary;index" value="34"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/scripting/script-for-properties;0">
+                <property name="text" value="flowVars.clear();&#xA;return payload;"/>
+                <property name="engine" value="Groovy"/>
+                <property name="auxiliary;index" value="35"/>
+                <property name="auxiliary;wrapIn" value="35"/>
+            </property-collection>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/scripting/script;0">
+                <property name="text" value="flowVars.clear();&#xA;return payload;"/>
+                <property name="engine" value="Groovy"/>
+                <property name="auxiliary;index" value="35"/>
+                <property name="auxiliary;wrapIn" value="35"/>
+            </property-collection>
+        </properties>
+    </pattern>
+    <pattern name="SECURE: input" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#3">
+        <graphicalData x="0" y="0" width="0" height="0"/>
+        <properties>
+            <property name="message" value="[#[message.id]] #[payload]"/>
+            <property name="category" value="secure.publish-client-to-com"/>
+            <property name="level" value="ERROR"/>
+            <property name="auxiliary;index" value="36"/>
+        </properties>
+    </pattern>
+    <pattern name="AUDIT: Failed" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#4">
+        <graphicalData x="0" y="0" width="0" height="0"/>
+        <properties>
+            <property name="message" value="[#[message.id]] Failed to send client to COM - ClientId: #[json:Client/ClientId]; Name: #[json:Client/ClientName]; Error: #[exception.getMessage()]; "/>
+            <property name="category" value="audit.publish-client-to-com"/>
+            <property name="level" value="ERROR"/>
+            <property name="auxiliary;index" value="37"/>
+        </properties>
+    </pattern>
+</lane>
+                            </compartment>
+                        </scope>
                     </lane>
                 </compartment>
             </scope>
         </lane>
     </flow>
-    <flow SubFlow="true" name="getClientIdFromCom" type="http://www.mulesoft.org/schema/mule/core/subflow" entity-id="e78817bf-465a-42bf-9469-016132e71620">
+    <flow SubFlow="true" name="getClientIdFromCom" type="http://www.mulesoft.org/schema/mule/core/subflow" entity-id="04d678c2-5e35-4c7e-80b1-962419f21c66">
         <properties>
             <property name="initialState"/>
             <property name="processingStrategy2"/>
             <property name="processingStrategy"/>
             <property name="bussinessEventsLabel"/>
             <property name="tracking:enable-default-events"/>
-            <property name="auxiliary;index" value="12"/>
+            <property name="auxiliary;index" value="38"/>
         </properties>
-        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#3">
+        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#6">
             <graphicalData x="0" y="0" width="0" height="0"/>
             <pattern name="Checks Client Id Exists Or Not" type="http://www.mulesoft.org/schema/mule/db/database-connector" entity-id="Database#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
@@ -165,16 +404,16 @@
                     <property name=""/>
                     <property name="fetchSize"/>
                     <property name="source"/>
-                    <property name="transactionalAction"/>
+                    <property name="transactionalAction" value="NOT_SUPPORTED"/>
                     <property name="target"/>
                     <property name="maxRows"/>
                     <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/db/select"/>
                     <property name="config-ref" value="Oracle_Database_Configuration"/>
-                    <property name="auxiliary;index" value="13"/>
+                    <property name="auxiliary;index" value="39"/>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/db/parameterized-query;0">
                         <property name="text" value="select corp_wellness_id from CORP_WELLNESS where work_id=#[json:Client/ClientId]"/>
-                        <property name="auxiliary;index" value="14"/>
-                        <property name="auxiliary;wrapIn" value="14"/>
+                        <property name="auxiliary;index" value="40"/>
+                        <property name="auxiliary;wrapIn" value="40"/>
                     </property-collection>
                 </properties>
             </pattern>
@@ -184,27 +423,27 @@
                     <property name="variableName" value="corp_wellness_id"/>
                     <property name="value" value="#[payload.size() &gt; 0 ? payload[0]['corp_wellness_id'] : null]"/>
                     <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
-                    <property name="auxiliary;index" value="15"/>
+                    <property name="auxiliary;index" value="41"/>
                 </properties>
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="true" name="callStoredProcedure" type="http://www.mulesoft.org/schema/mule/core/subflow" entity-id="5e88f253-5aba-4f0c-af60-10c94bd1e31c">
+    <flow SubFlow="true" name="callStoredProcedure" type="http://www.mulesoft.org/schema/mule/core/subflow" entity-id="2ec6cddb-3e56-49b1-8e7e-168b1b9e4b41">
         <properties>
             <property name="initialState"/>
             <property name="processingStrategy2"/>
             <property name="processingStrategy"/>
             <property name="bussinessEventsLabel"/>
             <property name="tracking:enable-default-events"/>
-            <property name="auxiliary;index" value="16"/>
+            <property name="auxiliary;index" value="42"/>
         </properties>
-        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#4">
+        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#7">
             <graphicalData x="0" y="0" width="0" height="0"/>
-            <pattern name="Set original input" type="http://www.mulesoft.org/schema/mule/core/set-payload" entity-id="Set Payload#1">
+            <pattern name="Set original input" type="http://www.mulesoft.org/schema/mule/core/set-payload" entity-id="Set Payload#2">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="value" value="#[inputJson]"/>
-                    <property name="auxiliary;index" value="17"/>
+                    <property name="auxiliary;index" value="43"/>
                 </properties>
             </pattern>
             <pattern name="Map to SP parameters" type="http://www.mulesoft.org/schema/mule/ee/data-mapper/data-mapper-connector" entity-id="DataMapper#2">
@@ -217,7 +456,7 @@
                     <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/ee/data-mapper/transform"/>
                     <property name="pipeSize"/>
                     <property name="config-ref" value="Proc_param_map"/>
-                    <property name="auxiliary;index" value="18"/>
+                    <property name="auxiliary;index" value="44"/>
                 </properties>
             </pattern>
             <pattern name="Invoke Pkg_Admin_Program.p_insupd_corp_wellness" type="http://www.mulesoft.org/schema/mule/db/database-connector" entity-id="Database#2">
@@ -227,41 +466,57 @@
                     <property name=""/>
                     <property name="fetchSize"/>
                     <property name="source"/>
-                    <property name="transactionalAction"/>
+                    <property name="transactionalAction" value="NOT_SUPPORTED"/>
                     <property name="target"/>
                     <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/db/stored-procedure"/>
                     <property name="config-ref" value="Oracle_Database_Configuration"/>
-                    <property name="auxiliary;index" value="19"/>
+                    <property name="auxiliary;index" value="45"/>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/db/parameterized-query;0">
                         <property name="text" value="call Pkg_Admin_Program.p_insupd_corp_wellness(#[p_corp_wellness_id],NULL,#[p_corprate_name],#[p_work_id],#[p_page],NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,1)"/>
-                        <property name="auxiliary;index" value="20"/>
-                        <property name="auxiliary;wrapIn" value="20"/>
+                        <property name="auxiliary;index" value="46"/>
+                        <property name="auxiliary;wrapIn" value="46"/>
                     </property-collection>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/db/in-param;0">
                         <property name="name" value="p_corp_wellness_id"/>
                         <property name="value" value="#[flowVars['corp_wellness_id']]"/>
                         <property name="type" value="INTEGER"/>
-                        <property name="auxiliary;index" value="21"/>
-                        <property name="auxiliary;wrapIn" value="21"/>
+                        <property name="auxiliary;index" value="47"/>
+                        <property name="auxiliary;wrapIn" value="47"/>
                     </property-collection>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/db/in-param;1">
                         <property name="name" value="p_corprate_name"/>
                         <property name="value" value="#[payload['p_corprate_name']]"/>
-                        <property name="auxiliary;index" value="22"/>
-                        <property name="auxiliary;wrapIn" value="22"/>
+                        <property name="auxiliary;index" value="48"/>
+                        <property name="auxiliary;wrapIn" value="48"/>
                     </property-collection>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/db/in-param;2">
                         <property name="name" value="p_work_id"/>
                         <property name="value" value="#[payload['p_work_id']]"/>
-                        <property name="auxiliary;index" value="23"/>
-                        <property name="auxiliary;wrapIn" value="23"/>
+                        <property name="auxiliary;index" value="49"/>
+                        <property name="auxiliary;wrapIn" value="49"/>
                     </property-collection>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/db/in-param;3">
                         <property name="name" value="p_page_id"/>
                         <property name="value" value="#[payload['p_page_id']]"/>
-                        <property name="auxiliary;index" value="24"/>
-                        <property name="auxiliary;wrapIn" value="24"/>
+                        <property name="auxiliary;index" value="50"/>
+                        <property name="auxiliary;wrapIn" value="50"/>
                     </property-collection>
+                </properties>
+            </pattern>
+            <pattern name="Set original input" type="http://www.mulesoft.org/schema/mule/core/set-payload" entity-id="Set Payload#3">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="value" value="#[inputJson]"/>
+                    <property name="auxiliary;index" value="51"/>
+                </properties>
+            </pattern>
+            <pattern name="AUDIT: Success" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#5">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="message" value="[#[message.id]] Client sent to COM - ClientId: #[json:Client/ClientId]; Name: #[json:Client/ClientName];"/>
+                    <property name="category" value="audit.publish-client-to-com"/>
+                    <property name="level" value="INFO"/>
+                    <property name="auxiliary;index" value="52"/>
                 </properties>
             </pattern>
         </lane>

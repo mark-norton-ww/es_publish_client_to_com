@@ -1,4 +1,4 @@
-<mule xmlns:jdbc-ee="http://www.mulesoft.org/schema/mule/ee/jdbc"
+<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:jdbc-ee="http://www.mulesoft.org/schema/mule/ee/jdbc"
 	xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper"
 	xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
 	xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:db="http://www.mulesoft.org/schema/mule/db"
@@ -6,7 +6,7 @@
 	xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.5.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"	
 	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
@@ -15,15 +15,47 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
 http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
-http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 	<context:property-placeholder location="classpath:api.properties" />
 
+	<spring:beans>
+		<!-- ActiveMQ Redelivery policy -->
+		<spring:bean id="redeliveryPolicy" name="redeliveryPolicy"
+			class="org.apache.activemq.RedeliveryPolicy">
+			<spring:property name="maximumRedeliveries" value="-1" />
+			<spring:property name="initialRedeliveryDelay" value="1000" />
+			<spring:property name="redeliveryDelay" value="1000" />
+			<spring:property name="maximumRedeliveryDelay" value="30000" />
+			<spring:property name="useExponentialBackOff" value="true" />
+			<spring:property name="backOffMultiplier" value="4" />		
+		</spring:bean>
+
+		<!-- ActiveMQ Connection factory -->
+		<spring:bean id="amqFactory"
+			class="org.apache.activemq.ActiveMQConnectionFactory" lazy-init="true" name="amqFactory">
+            <spring:property name="brokerURL" value="failover:(tcp://${activemq.host}:${activemq.port})"/>
+ 			<spring:property name="redeliveryPolicy" ref="redeliveryPolicy"> </spring:property>			
+		</spring:bean>
+		
+		<!--  Datasource -->
+		<spring:bean id="jdbcDataSource" class="org.enhydra.jdbc.standard.StandardDataSource" destroy-method="shutdown">
+		    <spring:property name="driverName" value="oracle.jdbc.driver.OracleDriver"/>
+		    <spring:property name="url" value="${oracle.db.url}"/>
+		    <spring:property name="user" value="${oracle.db.username}"/>
+		    <spring:property name="password" value="${oracle.db.password}"/>
+		</spring:bean>
+
+	</spring:beans>
+
 	<jms:activemq-connector name="Active_MQ"
-		username="${activemq.user}" password="${activemq.password}" brokerURL="tcp://${activemq.host}:${activemq.port}"
-		validateConnections="true" doc:name="Active MQ"></jms:activemq-connector>
+		username="${activemq.user}" password="${activemq.password}"
+		validateConnections="true" doc:name="Active MQ" clientId="Consumer.PublishClientToCom.VirtualTopic.PublishClient" 
+		durable="true" maxRedelivery="-1" numberOfConsumers="2" specification="1.1" connectionFactory-ref="amqFactory">
+        <reconnect-forever/>
+    </jms:activemq-connector>
 	
-	<db:generic-config name="Oracle_Database_Configuration"
-		url="jdbc:oracle:thin:${oracle.db.username}/${oracle.db.password}@${oracle.db.host}:${oracle.db.port}:${oracle.db.sid}" driverClassName="oracle.jdbc.driver.OracleDriver"
+	<db:generic-config name="Oracle_Database_Configuration" dataSource-ref="jdbcDataSource"		
 		doc:name="Generic Database Configuration"></db:generic-config>
 
 	<data-mapper:config name="Proc_param_map"
@@ -31,37 +63,58 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 		
 	<flow name="publishClientToComFlow" doc:name="publishClientToComFlow"
 		processingStrategy="synchronous">
-		<jms:inbound-endpoint topic="${activemq.topic.name}"
-			connector-ref="Active_MQ" doc:name="Topic.PublishClient"></jms:inbound-endpoint>
-			
-		<set-variable variableName="inputJson" value="#[payload]"
+		<jms:inbound-endpoint topic="VirtualTopic.PublishClient"
+			connector-ref="Active_MQ" doc:name="From publish client topic">
+            <jms:transaction action="ALWAYS_BEGIN"/>
+        </jms:inbound-endpoint>
+        <set-variable variableName="inputJson" value="#[payload]"
 			doc:name="Store original input"></set-variable>
+        <logger message="[#[message.id]] Client received: #[json:Client/ClientId]" level="INFO" doc:name="Received"/>
 
 		<flow-ref name="getClientIdFromCom" doc:name="Prepare Data for Stored Procedure"></flow-ref>
 		<flow-ref name="callStoredProcedure" doc:name="Call Stored Procedure"></flow-ref>
-		<catch-exception-strategy doc:name="Catch Exception Strategy">
-			<logger level="ERROR" doc:name="Log Exception"
-				message="Exception occured in Publish Client to COM : #[exception.cause.message]"></logger>
-		</catch-exception-strategy>
+
+        <choice-exception-strategy doc:name="Choice Exception Strategy">
+            <rollback-exception-strategy doc:name="Rollback Exception Strategy" when="#[exception.getCauseException().toString().toLowerCase().contains('cannot get connection')]">
+                <logger message="[#[message.id]] Connection error - message will be retried. #[exception]" level="WARN" doc:name="CONN: Retry" category="connection.publish-client-to-com"/>
+            </rollback-exception-strategy>        
+            <catch-exception-strategy doc:name="Catch Exception Strategy">
+                <set-payload value="#[flowVars[&quot;inputJson&quot;]]" doc:name="Original input"/>
+                <scripting:component doc:name="Clear variables">
+                    <scripting:script engine="Groovy"><![CDATA[flowVars.clear();
+return payload;]]></scripting:script>
+                </scripting:component>
+                <logger message="[#[message.id]] #[payload]" level="ERROR" category="secure.publish-client-to-com" doc:name="SECURE: input"/>
+                <logger message="[#[message.id]] Failed to send client to COM - ClientId: #[json:Client/ClientId]; Name: #[json:Client/ClientName]; Error: #[exception.getMessage()]; " level="ERROR" doc:name="AUDIT: Failed" category="audit.publish-client-to-com"/>               
+            </catch-exception-strategy>
+        </choice-exception-strategy>
 	</flow>
+	
+	
 	<sub-flow name="getClientIdFromCom" doc:name="getClientIdFromCom">
-        <db:select config-ref="Oracle_Database_Configuration" doc:name="Checks Client Id Exists Or Not">
+        <db:select config-ref="Oracle_Database_Configuration" doc:name="Checks Client Id Exists Or Not" transactionalAction="NOT_SUPPORTED">
             <db:parameterized-query><![CDATA[select corp_wellness_id from CORP_WELLNESS where work_id=#[json:Client/ClientId]]]></db:parameterized-query>
+
         </db:select>
 		<set-variable variableName="corp_wellness_id"
 			value="#[payload.size() &gt; 0 ? payload[0]['corp_wellness_id'] : null]"
 			doc:name="Store corp_wellness_id" />
 	</sub-flow>
+	
+	
 	<sub-flow name="callStoredProcedure" doc:name="callStoredProcedure">
         <set-payload value="#[inputJson]" doc:name="Set original input" />
         <data-mapper:transform config-ref="Proc_param_map"
 			doc:name="Map to SP parameters" />
-        <db:stored-procedure config-ref="Oracle_Database_Configuration" doc:name="Invoke Pkg_Admin_Program.p_insupd_corp_wellness">
+
+        <db:stored-procedure config-ref="Oracle_Database_Configuration" transactionalAction="NOT_SUPPORTED" doc:name="Invoke Pkg_Admin_Program.p_insupd_corp_wellness">
             <db:parameterized-query><![CDATA[call Pkg_Admin_Program.p_insupd_corp_wellness(#[p_corp_wellness_id],NULL,#[p_corprate_name],#[p_work_id],#[p_page],NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,1)]]></db:parameterized-query>
             <db:in-param name="p_corp_wellness_id" type="INTEGER" value="#[flowVars['corp_wellness_id']]"/>
             <db:in-param name="p_corprate_name" value="#[payload['p_corprate_name']]"/>
             <db:in-param name="p_work_id" value="#[payload['p_work_id']]"/>
             <db:in-param name="p_page_id" value="#[payload['p_page_id']]"/>
         </db:stored-procedure>
+		<set-payload value="#[inputJson]" doc:name="Set original input" />        
+        <logger message="[#[message.id]] Client sent to COM - ClientId: #[json:Client/ClientId]; Name: #[json:Client/ClientName];" level="INFO" category="audit.publish-client-to-com" doc:name="AUDIT: Success"/>
 	</sub-flow>
 </mule>
