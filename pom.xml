@@ -189,17 +189,25 @@
      <artifactId>ojdbc6</artifactId>
      <version>[11.2,)</version>
    </dependency>
+	<dependency>
+             <groupId>com.weightwatchers.global</groupId>
+             <artifactId>envconfig</artifactId>
+             <version>1.0.0-SNAPSHOT</version>
+	</dependency>    
+
     <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-spring-config</artifactId>
             <version>${mule.version}</version>
             <scope>provided</scope>
-        </dependency>
+    </dependency>
     <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-scripting</artifactId>
             <version>${mule.version}</version>
             <scope>provided</scope>
-        </dependency>
+    </dependency>
+       
+        
     </dependencies>
 </project>
