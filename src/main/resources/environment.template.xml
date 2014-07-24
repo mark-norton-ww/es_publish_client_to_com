@@ -2,8 +2,6 @@
 <properties name="Template" version="12.2">
 	
 	<!--environment.global.config entries START-->
-	<property name="es.mule.sharedhttp.host" value="" />
-	<property name="es.mule.sharedhttp.port" value="" />
 	<property name="es.mule.activemq.host" value="" />
 	<property name="es.mule.activemq.port" value="" />
 	<property name="es.mule.activemq.username" value="" />
