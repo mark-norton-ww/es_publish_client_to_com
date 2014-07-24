@@ -52,7 +52,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 		username="${activemq.user}" password="${activemq.password}"
 		validateConnections="true" doc:name="Active MQ" clientId="Consumer.PublishClientToCom.VirtualTopic.PublishClient" 
 		durable="true" maxRedelivery="-1" numberOfConsumers="2" specification="1.1" connectionFactory-ref="amqFactory">
-        <reconnect-forever/>
+        <reconnect-forever frequency="10000"/>
     </jms:activemq-connector>
 	
 	<db:generic-config name="Oracle_Database_Configuration" dataSource-ref="jdbcDataSource"		
@@ -80,10 +80,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
             </rollback-exception-strategy>        
             <catch-exception-strategy doc:name="Catch Exception Strategy">
                 <set-payload value="#[flowVars[&quot;inputJson&quot;]]" doc:name="Original input"/>
-                <scripting:component doc:name="Clear variables">
-                    <scripting:script engine="Groovy"><![CDATA[flowVars.clear();
-return payload;]]></scripting:script>
-                </scripting:component>
+                <remove-variable variableName="*" doc:name="Clear variables"/>
                 <logger message="[#[message.id]] #[payload]" level="ERROR" category="secure.publish-client-to-com" doc:name="SECURE: input"/>
                 <logger message="[#[message.id]] Failed to send client to COM - ClientId: #[json:Client/ClientId]; Name: #[json:Client/ClientName]; Error: #[exception.getMessage()]; " level="ERROR" doc:name="AUDIT: Failed" category="audit.publish-client-to-com"/>               
             </catch-exception-strategy>

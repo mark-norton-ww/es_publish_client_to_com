@@ -187,6 +187,7 @@
             <property name="cacheJmsSessions"/>
             <property name="jndiProviderProperties-ref"/>
             <property-collection name="@http://www.mulesoft.org/schema/mule/core/reconnect-forever;0">
+                <property name="frequency" value="10000"/>
                 <property name="auxiliary;index" value="19"/>
                 <property name="auxiliary;wrapIn" value="19"/>
             </property-collection>
@@ -213,7 +214,7 @@
             <property name="transformationGraphPath" value="json_to_map_1.grf"/>
         </properties>
     </global-element>
-    <flow SubFlow="false" name="publishClientToComFlow" type="http://www.mulesoft.org/schema/mule/core/flow" entity-id="c06f030a-20b3-41c0-97cf-641c7547c016">
+    <flow SubFlow="false" name="publishClientToComFlow" type="http://www.mulesoft.org/schema/mule/core/flow" entity-id="0c98e444-4352-4243-90f1-e2c75c5553bd">
         <properties>
             <property name="initialState"/>
             <property name="processingStrategy2" value="synchronous"/>
@@ -341,23 +342,12 @@
             <property name="auxiliary;index" value="33"/>
         </properties>
     </pattern>
-    <pattern name="Clear variables" type="http://www.mulesoft.org/schema/mule/scripting/groovyComponent" entity-id="Groovy#1">
+    <pattern name="Clear variables" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#2">
         <graphicalData x="0" y="0" width="0" height="0"/>
         <properties>
-            <property name="script-ref"/>
+            <property name="variableName" value="*"/>
+            <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/remove-variable"/>
             <property name="auxiliary;index" value="34"/>
-            <property-collection name="@http://www.mulesoft.org/schema/mule/scripting/script-for-properties;0">
-                <property name="text" value="flowVars.clear();&#xA;return payload;"/>
-                <property name="engine" value="Groovy"/>
-                <property name="auxiliary;index" value="35"/>
-                <property name="auxiliary;wrapIn" value="35"/>
-            </property-collection>
-            <property-collection name="@http://www.mulesoft.org/schema/mule/scripting/script;0">
-                <property name="text" value="flowVars.clear();&#xA;return payload;"/>
-                <property name="engine" value="Groovy"/>
-                <property name="auxiliary;index" value="35"/>
-                <property name="auxiliary;wrapIn" value="35"/>
-            </property-collection>
         </properties>
     </pattern>
     <pattern name="SECURE: input" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#3">
@@ -366,7 +356,7 @@
             <property name="message" value="[#[message.id]] #[payload]"/>
             <property name="category" value="secure.publish-client-to-com"/>
             <property name="level" value="ERROR"/>
-            <property name="auxiliary;index" value="36"/>
+            <property name="auxiliary;index" value="35"/>
         </properties>
     </pattern>
     <pattern name="AUDIT: Failed" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#4">
@@ -375,7 +365,7 @@
             <property name="message" value="[#[message.id]] Failed to send client to COM - ClientId: #[json:Client/ClientId]; Name: #[json:Client/ClientName]; Error: #[exception.getMessage()]; "/>
             <property name="category" value="audit.publish-client-to-com"/>
             <property name="level" value="ERROR"/>
-            <property name="auxiliary;index" value="37"/>
+            <property name="auxiliary;index" value="36"/>
         </properties>
     </pattern>
 </lane>
@@ -386,14 +376,14 @@
             </scope>
         </lane>
     </flow>
-    <flow SubFlow="true" name="getClientIdFromCom" type="http://www.mulesoft.org/schema/mule/core/subflow" entity-id="04d678c2-5e35-4c7e-80b1-962419f21c66">
+    <flow SubFlow="true" name="getClientIdFromCom" type="http://www.mulesoft.org/schema/mule/core/subflow" entity-id="004bfb44-db1e-49ef-9342-95b6a9ffed3f">
         <properties>
             <property name="initialState"/>
             <property name="processingStrategy2"/>
             <property name="processingStrategy"/>
             <property name="bussinessEventsLabel"/>
             <property name="tracking:enable-default-events"/>
-            <property name="auxiliary;index" value="38"/>
+            <property name="auxiliary;index" value="37"/>
         </properties>
         <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#6">
             <graphicalData x="0" y="0" width="0" height="0"/>
@@ -409,33 +399,33 @@
                     <property name="maxRows"/>
                     <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/db/select"/>
                     <property name="config-ref" value="Oracle_Database_Configuration"/>
-                    <property name="auxiliary;index" value="39"/>
+                    <property name="auxiliary;index" value="38"/>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/db/parameterized-query;0">
                         <property name="text" value="select corp_wellness_id from CORP_WELLNESS where work_id=#[json:Client/ClientId]"/>
-                        <property name="auxiliary;index" value="40"/>
-                        <property name="auxiliary;wrapIn" value="40"/>
+                        <property name="auxiliary;index" value="39"/>
+                        <property name="auxiliary;wrapIn" value="39"/>
                     </property-collection>
                 </properties>
             </pattern>
-            <pattern name="Store corp_wellness_id" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#2">
+            <pattern name="Store corp_wellness_id" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#3">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="variableName" value="corp_wellness_id"/>
                     <property name="value" value="#[payload.size() &gt; 0 ? payload[0]['corp_wellness_id'] : null]"/>
                     <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
-                    <property name="auxiliary;index" value="41"/>
+                    <property name="auxiliary;index" value="40"/>
                 </properties>
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="true" name="callStoredProcedure" type="http://www.mulesoft.org/schema/mule/core/subflow" entity-id="2ec6cddb-3e56-49b1-8e7e-168b1b9e4b41">
+    <flow SubFlow="true" name="callStoredProcedure" type="http://www.mulesoft.org/schema/mule/core/subflow" entity-id="79d41ba1-f078-4178-9552-d1164c3fdc41">
         <properties>
             <property name="initialState"/>
             <property name="processingStrategy2"/>
             <property name="processingStrategy"/>
             <property name="bussinessEventsLabel"/>
             <property name="tracking:enable-default-events"/>
-            <property name="auxiliary;index" value="42"/>
+            <property name="auxiliary;index" value="41"/>
         </properties>
         <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#7">
             <graphicalData x="0" y="0" width="0" height="0"/>
@@ -443,7 +433,7 @@
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="value" value="#[inputJson]"/>
-                    <property name="auxiliary;index" value="43"/>
+                    <property name="auxiliary;index" value="42"/>
                 </properties>
             </pattern>
             <pattern name="Map to SP parameters" type="http://www.mulesoft.org/schema/mule/ee/data-mapper/data-mapper-connector" entity-id="DataMapper#2">
@@ -456,7 +446,7 @@
                     <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/ee/data-mapper/transform"/>
                     <property name="pipeSize"/>
                     <property name="config-ref" value="Proc_param_map"/>
-                    <property name="auxiliary;index" value="44"/>
+                    <property name="auxiliary;index" value="43"/>
                 </properties>
             </pattern>
             <pattern name="Invoke Pkg_Admin_Program.p_insupd_corp_wellness" type="http://www.mulesoft.org/schema/mule/db/database-connector" entity-id="Database#2">
@@ -470,36 +460,36 @@
                     <property name="target"/>
                     <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/db/stored-procedure"/>
                     <property name="config-ref" value="Oracle_Database_Configuration"/>
-                    <property name="auxiliary;index" value="45"/>
+                    <property name="auxiliary;index" value="44"/>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/db/parameterized-query;0">
                         <property name="text" value="call Pkg_Admin_Program.p_insupd_corp_wellness(#[p_corp_wellness_id],NULL,#[p_corprate_name],#[p_work_id],#[p_page],NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,1)"/>
-                        <property name="auxiliary;index" value="46"/>
-                        <property name="auxiliary;wrapIn" value="46"/>
+                        <property name="auxiliary;index" value="45"/>
+                        <property name="auxiliary;wrapIn" value="45"/>
                     </property-collection>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/db/in-param;0">
                         <property name="name" value="p_corp_wellness_id"/>
                         <property name="value" value="#[flowVars['corp_wellness_id']]"/>
                         <property name="type" value="INTEGER"/>
-                        <property name="auxiliary;index" value="47"/>
-                        <property name="auxiliary;wrapIn" value="47"/>
+                        <property name="auxiliary;index" value="46"/>
+                        <property name="auxiliary;wrapIn" value="46"/>
                     </property-collection>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/db/in-param;1">
                         <property name="name" value="p_corprate_name"/>
                         <property name="value" value="#[payload['p_corprate_name']]"/>
-                        <property name="auxiliary;index" value="48"/>
-                        <property name="auxiliary;wrapIn" value="48"/>
+                        <property name="auxiliary;index" value="47"/>
+                        <property name="auxiliary;wrapIn" value="47"/>
                     </property-collection>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/db/in-param;2">
                         <property name="name" value="p_work_id"/>
                         <property name="value" value="#[payload['p_work_id']]"/>
-                        <property name="auxiliary;index" value="49"/>
-                        <property name="auxiliary;wrapIn" value="49"/>
+                        <property name="auxiliary;index" value="48"/>
+                        <property name="auxiliary;wrapIn" value="48"/>
                     </property-collection>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/db/in-param;3">
                         <property name="name" value="p_page_id"/>
                         <property name="value" value="#[payload['p_page_id']]"/>
-                        <property name="auxiliary;index" value="50"/>
-                        <property name="auxiliary;wrapIn" value="50"/>
+                        <property name="auxiliary;index" value="49"/>
+                        <property name="auxiliary;wrapIn" value="49"/>
                     </property-collection>
                 </properties>
             </pattern>
@@ -507,7 +497,7 @@
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="value" value="#[inputJson]"/>
-                    <property name="auxiliary;index" value="51"/>
+                    <property name="auxiliary;index" value="50"/>
                 </properties>
             </pattern>
             <pattern name="AUDIT: Success" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#5">
@@ -516,7 +506,7 @@
                     <property name="message" value="[#[message.id]] Client sent to COM - ClientId: #[json:Client/ClientId]; Name: #[json:Client/ClientName];"/>
                     <property name="category" value="audit.publish-client-to-com"/>
                     <property name="level" value="INFO"/>
-                    <property name="auxiliary;index" value="52"/>
+                    <property name="auxiliary;index" value="51"/>
                 </properties>
             </pattern>
         </lane>
