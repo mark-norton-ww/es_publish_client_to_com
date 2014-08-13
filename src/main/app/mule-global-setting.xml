@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.5.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd 
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd 
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+	<!-- Get properties from Global Environment Config, api.properties and api-override.properties -->
+	<spring:beans>
+	    <spring:import resource="classpath*:environment-loader-config.xml" />
+	    <spring:bean id="envConfigReader.properties" factory-bean="envConfigReader"
+	        factory-method="loadProperties" />
+	</spring:beans>
+ 
+  	<context:property-placeholder
+         properties-ref="envConfigReader.properties" location="dummy"
+         ignore-resource-not-found="true" ignore-unresolvable="true" order="1" />	
+	<context:property-placeholder location="classpath:api-override.properties" ignore-resource-not-found="true" ignore-unresolvable="true" order="2" />
+	<context:property-placeholder location="classpath:api.properties" ignore-resource-not-found="true" ignore-unresolvable="false" order="3" />
+
+	<spring:beans>
+		<!-- ActiveMQ Redelivery policy -->
+		<spring:bean id="redeliveryPolicy" name="redeliveryPolicy"
+			class="org.apache.activemq.RedeliveryPolicy">
+			<spring:property name="maximumRedeliveries" value="-1" />
+			<spring:property name="initialRedeliveryDelay" value="1000" />
+			<spring:property name="redeliveryDelay" value="1000" />
+			<spring:property name="maximumRedeliveryDelay" value="30000" />
+			<spring:property name="useExponentialBackOff" value="true" />
+			<spring:property name="backOffMultiplier" value="4" />		
+		</spring:bean>
+
+		<!-- ActiveMQ Connection factory -->
+		<spring:bean id="amqFactory"
+			class="org.apache.activemq.ActiveMQConnectionFactory" lazy-init="true" name="amqFactory">
+            <spring:property name="brokerURL" value="failover:(tcp://${es.mule.activemq.host}:${es.mule.activemq.port})"/>
+ 			<spring:property name="redeliveryPolicy" ref="redeliveryPolicy"> </spring:property>			
+		</spring:bean>
+		
+		<!--  Datasource -->
+		<spring:bean id="jdbcDataSource" class="org.enhydra.jdbc.standard.StandardDataSource" destroy-method="shutdown">
+		    <spring:property name="driverName" value="oracle.jdbc.driver.OracleDriver"/>
+		    <spring:property name="url" value="${es.db.com.url}"/>
+		    <spring:property name="user" value="${es.db.com.username}"/>
+		    <spring:property name="password" value="${es.db.com.password}"/>
+		</spring:bean>
+
+	</spring:beans>
+
+	<jms:activemq-connector name="Active_MQ"
+		username="${es.mule.activemq.username}" password="${es.mule.activemq.password}"
+		validateConnections="true" doc:name="Active MQ" clientId="${es.mule.activemq.publish-client-to-com.durableName}" 
+		durable="true" maxRedelivery="-1" numberOfConsumers="2" specification="1.1" connectionFactory-ref="amqFactory">
+        <reconnect-forever frequency="10000"/>
+    </jms:activemq-connector>
+
+
+
+</mule>

@@ -1,50 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?><Graph __version="3.5.0" author="427143" created="Thu Jul 03 21:13:18 IST 2014" description="JSON To Map" guiVersion="3.4.3.P" id="1404445617023" licenseCode="Unlicensed" licenseType="Unknown" modified="Thu Jul 03 21:13:18 IST 2014" modifiedBy="427143" name="JSON_To_Map_1" preview-file="C:/Users/427143/Desktop/UpdatedInputJson.json" revision="1.0" showComponentDetails="false">
 <Global>
-<Metadata __index="8" __referenceCounter="0" __sourcePath="{}/object/Client/Address" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="cdc1608c-80c0-4d1a-a974-3d4ff6d443b6" _parent_id="__parent_id" _type="Input" id="4380c066-d834-43f7-9513-001fcda1f3af">
+<Metadata __index="13" __referenceCounter="0" __sourcePath="{}/object/Client/Address" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="cdc1608c-80c0-4d1a-a974-3d4ff6d443b6" _parent_id="__parent_id" _type="Input" id="4380c066-d834-43f7-9513-001fcda1f3af">
 <Record fieldDelimiter="," name="Address" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
-<Field __artificialType="_parent_id" __systemManaged="true" label="__parent_id" name="__parent_id" type="string"/>
-<Field __artificialType="_id" __systemManaged="true" label="__id" name="__id" type="string"/>
-<Field __index="8" __sourcePath="{}/object/Client/Address/AddressId" containerType="SINGLE" label="AddressId" name="AddressId" type="string"/>
-<Field __index="9" __sourcePath="{}/object/Client/Address/StreetAddress" containerType="SINGLE" label="StreetAddress" name="StreetAddress" type="string"/>
-<Field __index="10" __sourcePath="{}/object/Client/Address/AddressLine2" containerType="SINGLE" label="AddressLine2" name="AddressLine2" type="string"/>
-<Field __index="11" __sourcePath="{}/object/Client/Address/City" containerType="SINGLE" label="City" name="City" type="string"/>
-<Field __index="12" __sourcePath="{}/object/Client/Address/State" containerType="SINGLE" label="State" name="State" type="string"/>
-<Field __index="13" __sourcePath="{}/object/Client/Address/Zipcode" containerType="SINGLE" label="Zipcode" name="Zipcode" type="string"/>
-<Field __index="14" __sourcePath="{}/object/Client/Address/Mailstop" containerType="SINGLE" label="Mailstop" name="Mailstop" type="string"/>
-<Field __index="15" __sourcePath="{}/object/Client/Address/Country" containerType="SINGLE" label="Country" name="Country" type="string"/>
-<Field __index="16" __sourcePath="{}/object/Client/Address/Country3Digit" containerType="SINGLE" label="Country3Digit" name="Country3Digit" type="string"/>
-<Field __index="17" __sourcePath="{}/object/Client/Address/Active" containerType="SINGLE" label="Active" name="Active" type="string"/>
-<Field __index="18" __sourcePath="{}/object/Client/Address/Primary" containerType="SINGLE" label="Primary" name="Primary" type="string"/>
-<Field __index="19" __sourcePath="{}/object/Client/Address/AddressType" containerType="SINGLE" label="AddressType" name="AddressType" type="string"/>
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="13" __sourcePath="{}/object/Client/Address/AddressId" containerType="SINGLE" label="AddressId" name="AddressId" type="string"/>
+<Field __index="14" __sourcePath="{}/object/Client/Address/StreetAddress" containerType="SINGLE" label="StreetAddress" name="StreetAddress" type="string"/>
+<Field __index="15" __sourcePath="{}/object/Client/Address/AddressLine2" containerType="SINGLE" label="AddressLine2" name="AddressLine2" type="string"/>
+<Field __index="16" __sourcePath="{}/object/Client/Address/City" containerType="SINGLE" label="City" name="City" type="string"/>
+<Field __index="17" __sourcePath="{}/object/Client/Address/State" containerType="SINGLE" label="State" name="State" type="string"/>
+<Field __index="18" __sourcePath="{}/object/Client/Address/StateCode" containerType="SINGLE" label="StateCode" name="StateCode" type="string"/>
+<Field __index="19" __sourcePath="{}/object/Client/Address/Zipcode" containerType="SINGLE" label="Zipcode" name="Zipcode" type="string"/>
+<Field __index="20" __sourcePath="{}/object/Client/Address/Country" containerType="SINGLE" label="Country" name="Country" type="string"/>
+<Field __index="21" __sourcePath="{}/object/Client/Address/Country2Digit" containerType="SINGLE" label="Country2Digit" name="Country2Digit" type="string"/>
+<Field __index="22" __sourcePath="{}/object/Client/Address/Active" containerType="SINGLE" label="Active" name="Active" type="string"/>
+<Field __index="23" __sourcePath="{}/object/Client/Address/Primary" containerType="SINGLE" label="Primary" name="Primary" type="string"/>
+<Field __index="24" __sourcePath="{}/object/Client/Address/AddressType" containerType="SINGLE" label="AddressType" name="AddressType" type="string"/>
 </Record>
 </Metadata>
-<Metadata __index="20" __referenceCounter="0" __sourcePath="{}/object/Client/Address/Contact" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="4380c066-d834-43f7-9513-001fcda1f3af" _parent_id="__parent_id" _type="Input" id="187a87b8-87e3-44ed-8ff0-1e522b124ddb">
+<Metadata __index="25" __referenceCounter="0" __sourcePath="{}/object/Client/Address/Contact" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="4380c066-d834-43f7-9513-001fcda1f3af" _parent_id="__parent_id" _type="Input" id="187a87b8-87e3-44ed-8ff0-1e522b124ddb">
 <Record fieldDelimiter="," name="Contact" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
-<Field __artificialType="_parent_id" __systemManaged="true" label="__parent_id" name="__parent_id" type="string"/>
-<Field __artificialType="_id" __systemManaged="true" label="__id" name="__id" type="string"/>
-<Field __index="20" __sourcePath="{}/object/Client/Address/Contact/ContactId" containerType="SINGLE" label="ContactId" name="ContactId" type="string"/>
-<Field __index="21" __sourcePath="{}/object/Client/Address/Contact/First" containerType="SINGLE" label="First" name="First" type="string"/>
-<Field __index="22" __sourcePath="{}/object/Client/Address/Contact/Last" containerType="SINGLE" label="Last" name="Last" type="string"/>
-<Field __index="23" __sourcePath="{}/object/Client/Address/Contact/Title" containerType="SINGLE" label="Title" name="Title" type="string"/>
-<Field __index="24" __sourcePath="{}/object/Client/Address/Contact/Phone" containerType="SINGLE" label="Phone" name="Phone" type="string"/>
-<Field __index="25" __sourcePath="{}/object/Client/Address/Contact/Extension" containerType="SINGLE" label="Extension" name="Extension" type="string"/>
-<Field __index="26" __sourcePath="{}/object/Client/Address/Contact/Email" containerType="SINGLE" label="Email" name="Email" type="string"/>
-<Field __index="27" __sourcePath="{}/object/Client/Address/Contact/Fax" containerType="SINGLE" label="Fax" name="Fax" type="string"/>
-<Field __index="28" __sourcePath="{}/object/Client/Address/Contact/Active" containerType="SINGLE" label="Active" name="Active" type="string"/>
-<Field __index="29" __sourcePath="{}/object/Client/Address/Contact/ClientAddressContactId" containerType="SINGLE" label="ClientAddressContactId" name="ClientAddressContactId" type="string"/>
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="25" __sourcePath="{}/object/Client/Address/Contact/ContactId" containerType="SINGLE" label="ContactId" name="ContactId" type="string"/>
+<Field __index="26" __sourcePath="{}/object/Client/Address/Contact/First" containerType="SINGLE" label="First" name="First" type="string"/>
+<Field __index="27" __sourcePath="{}/object/Client/Address/Contact/Last" containerType="SINGLE" label="Last" name="Last" type="string"/>
+<Field __index="28" __sourcePath="{}/object/Client/Address/Contact/Title" containerType="SINGLE" label="Title" name="Title" type="string"/>
+<Field __index="29" __sourcePath="{}/object/Client/Address/Contact/Phone" containerType="SINGLE" label="Phone" name="Phone" type="string"/>
+<Field __index="30" __sourcePath="{}/object/Client/Address/Contact/Extension" containerType="SINGLE" label="Extension" name="Extension" type="string"/>
+<Field __index="31" __sourcePath="{}/object/Client/Address/Contact/Email" containerType="SINGLE" label="Email" name="Email" type="string"/>
+<Field __index="32" __sourcePath="{}/object/Client/Address/Contact/Active" containerType="SINGLE" label="Active" name="Active" type="string"/>
+<Field __index="33" __sourcePath="{}/object/Client/Address/Contact/Address/AddressId" containerType="SINGLE" label="AddressId" name="AddressId" type="string"/>
+<Field __index="34" __sourcePath="{}/object/Client/Address/Contact/Address/StreetAddress" containerType="SINGLE" label="StreetAddress" name="StreetAddress" type="string"/>
+<Field __index="35" __sourcePath="{}/object/Client/Address/Contact/Address/AddressLine2" containerType="SINGLE" label="AddressLine2" name="AddressLine2" type="string"/>
+<Field __index="36" __sourcePath="{}/object/Client/Address/Contact/Address/City" containerType="SINGLE" label="City" name="City" type="string"/>
+<Field __index="37" __sourcePath="{}/object/Client/Address/Contact/Address/State" containerType="SINGLE" label="State" name="State" type="string"/>
+<Field __index="38" __sourcePath="{}/object/Client/Address/Contact/Address/StateCode" containerType="SINGLE" label="StateCode" name="StateCode" type="string"/>
+<Field __index="39" __sourcePath="{}/object/Client/Address/Contact/Address/Zipcode" containerType="SINGLE" label="Zipcode" name="Zipcode" type="string"/>
+<Field __index="40" __sourcePath="{}/object/Client/Address/Contact/Address/Country" containerType="SINGLE" label="Country" name="Country" type="string"/>
+<Field __index="41" __sourcePath="{}/object/Client/Address/Contact/Address/Country2Digit" containerType="SINGLE" label="Country2Digit" name="Country2Digit" type="string"/>
+<Field __index="42" __sourcePath="{}/object/Client/Address/Contact/Address/Active" containerType="SINGLE" label="Active" name="Active_1" type="string"/>
+<Field __index="43" __sourcePath="{}/object/Client/Address/Contact/Address/Primary" containerType="SINGLE" label="Primary" name="Primary" type="string"/>
+<Field __index="44" __sourcePath="{}/object/Client/Address/Contact/Address/AddressType" containerType="SINGLE" label="AddressType" name="AddressType" type="string"/>
 </Record>
 </Metadata>
 <Metadata __index="0" __referenceCounter="1" __sourcePath="{}/object" _dataStructure="OBJECT" _id="__id" _type="Input" id="cdc1608c-80c0-4d1a-a974-3d4ff6d443b6">
 <Record fieldDelimiter="," name="object" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
-<Field __artificialType="_id" __systemManaged="true" label="__id" name="__id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
 <Field __index="0" __sourcePath="{}/object/Client/ClientId" containerType="SINGLE" label="ClientId" name="ClientId" type="string"/>
 <Field __index="1" __sourcePath="{}/object/Client/ClientName" containerType="SINGLE" label="ClientName" name="ClientName" type="string"/>
-<Field __index="2" __sourcePath="{}/object/Client/AccountType" containerType="SINGLE" label="AccountType" name="AccountType" type="string"/>
-<Field __index="3" __sourcePath="{}/object/Client/Active" containerType="SINGLE" label="Active" name="Active" type="string"/>
-<Field __index="4" __sourcePath="{}/object/Client/HealthPlanClientId" containerType="SINGLE" label="HealthPlanClientId" name="HealthPlanClientId" type="string"/>
-<Field __index="5" __sourcePath="{}/object/Client/TaxId" containerType="SINGLE" label="TaxId" name="TaxId" type="string"/>
-<Field __index="6" __sourcePath="{}/object/Client/EffectiveStartDate" containerType="SINGLE" label="EffectiveStartDate" name="EffectiveStartDate" type="string"/>
-<Field __index="7" __sourcePath="{}/object/Client/EffectiveEndDate" containerType="SINGLE" label="EffectiveEndDate" name="EffectiveEndDate" type="string"/>
+<Field __index="2" __sourcePath="{}/object/Client/DUNSNumber" containerType="SINGLE" label="DUNSNumber" name="DUNSNumber" type="string"/>
+<Field __index="3" __sourcePath="{}/object/Client/HealthPlanClientId" containerType="SINGLE" label="HealthPlanClientId" name="HealthPlanClientId" type="string"/>
+<Field __index="4" __sourcePath="{}/object/Client/AccountType" containerType="SINGLE" label="AccountType" name="AccountType" type="string"/>
+<Field __index="5" __sourcePath="{}/object/Client/Status" containerType="SINGLE" label="Status" name="Status" type="string"/>
+<Field __index="6" __sourcePath="{}/object/Client/Industry" containerType="SINGLE" label="Industry" name="Industry" type="string"/>
+<Field __index="7" __sourcePath="{}/object/Client/TaxId" containerType="SINGLE" label="TaxId" name="TaxId" type="string"/>
+<Field __index="8" __sourcePath="{}/object/Client/EffectiveStartDate" containerType="SINGLE" label="EffectiveStartDate" name="EffectiveStartDate" type="string"/>
+<Field __index="9" __sourcePath="{}/object/Client/EffectiveEndDate" containerType="SINGLE" label="EffectiveEndDate" name="EffectiveEndDate" type="string"/>
+<Field __index="10" __sourcePath="{}/object/Client/SourceSystem" containerType="SINGLE" label="SourceSystem" name="SourceSystem" type="string"/>
+<Field __index="11" __sourcePath="{}/object/Client/SourceInternalID" containerType="SINGLE" label="SourceInternalID" name="SourceInternalID" type="string"/>
+<Field __index="12" __sourcePath="{}/object/Client/SourceVersion" containerType="SINGLE" label="SourceVersion" name="SourceVersion" type="string"/>
 </Record>
 </Metadata>
 <Metadata __index="0" __referenceCounter="1" __sourcePath="{}/Passing_x0020Values_x0020to_x0020Stored_x0020Procedure" _dataStructure="OBJECT" _id="__id" _type="Output" id="54c1a391-341b-48f7-83f4-0296cff02a38">
@@ -70,23 +85,28 @@ output.p_work_id = input.ClientId;
 output.p_corprate_name = input.ClientName;
 output.p_page_id = input.ClientName;]]></attr>
 </Node>
-<Node charset="UTF-8" enabled="enabled" fileURL="dict:inputPayload" guiName="JSON READER" guiX="20" guiY="20" id="JSON_READER0" type="JSON_READER">
+<Node charset="UTF-8" dataPolicy="Lenient" enabled="enabled" fileURL="dict:inputPayload" guiName="JSON READER" guiX="20" guiY="20" id="JSON_READER0" type="JSON_READER">
 <attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Context xpath="/root">
   <Context outPort="0" sequenceField="__id" xpath="object">
     <Mapping cloverField="ClientId" trim="true" xpath="Client/ClientId"/>
     <Mapping cloverField="ClientName" trim="true" xpath="Client/ClientName"/>
-    <Mapping cloverField="AccountType" trim="true" xpath="Client/AccountType"/>
-    <Mapping cloverField="Active" trim="true" xpath="Client/Active"/>
+    <Mapping cloverField="DUNSNumber" trim="true" xpath="Client/DUNSNumber"/>
     <Mapping cloverField="HealthPlanClientId" trim="true" xpath="Client/HealthPlanClientId"/>
+    <Mapping cloverField="AccountType" trim="true" xpath="Client/AccountType"/>
+    <Mapping cloverField="Status" trim="true" xpath="Client/Status"/>
+    <Mapping cloverField="Industry" trim="true" xpath="Client/Industry"/>
     <Mapping cloverField="TaxId" trim="true" xpath="Client/TaxId"/>
     <Mapping cloverField="EffectiveStartDate" trim="true" xpath="Client/EffectiveStartDate"/>
     <Mapping cloverField="EffectiveEndDate" trim="true" xpath="Client/EffectiveEndDate"/>
+    <Mapping cloverField="SourceSystem" trim="true" xpath="Client/SourceSystem"/>
+    <Mapping cloverField="SourceInternalID" trim="true" xpath="Client/SourceInternalID"/>
+    <Mapping cloverField="SourceVersion" trim="true" xpath="Client/SourceVersion"/>
   </Context>
 </Context>
 ]]></attr>
 <attr name="_data_format"><![CDATA[JSON]]></attr>
-<attr name="jsonSchemaURL"><![CDATA[C:\Users\427143\Desktop\UpdatedInputJson.json]]></attr>
+<attr name="jsonSchemaURL"><![CDATA[F:/Projects/ClientSetup/Service/Client1.json]]></attr>
 </Node>
 <Node cacheInMemory="true" enabled="enabled" fileURL="dict:outputPayload" guiName="Map&lt;k,v&gt; WRITER" guiX="900" guiY="20" id="MAP_WRITER0" type="MAP_WRITER">
 <attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
