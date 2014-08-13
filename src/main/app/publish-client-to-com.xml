@@ -55,7 +55,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
  
   	<context:property-placeholder
          properties-ref="envConfigReader.properties" location="classpath:mule-env-config.properties"
-         ignore-resource-not-found="false" order="1" />
+          order="1" />
 	<!-- Get properties from Environment Config done -->	
 
 	<spring:beans>
@@ -149,6 +149,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
             <db:in-param name="p_corprate_name" value="#[payload['p_corprate_name']]"/>
             <db:in-param name="p_work_id" value="#[payload['p_work_id']]"/>
             <db:in-param name="p_page_id" value="#[payload['p_page_id']]"/>
+
         </db:stored-procedure>
 		<set-payload value="#[inputJson]" doc:name="Set original input" />        
         <logger message="[#[message.id]] Client sent to COM - ClientId: #[json:Client/ClientId]; Name: #[json:Client/ClientName];" level="INFO" category="audit.publish-client-to-com" doc:name="AUDIT: Success"/>
