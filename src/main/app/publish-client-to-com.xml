@@ -27,7 +27,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 		
 	<flow name="publishClientToComFlow" doc:name="publishClientToComFlow"
 		processingStrategy="synchronous">
-		<jms:inbound-endpoint topic="${es.mule.activemq.publish-client.topic}"
+		<jms:inbound-endpoint queue="${es.mule.activemq.publish-client-to-com.queueName}"
 			connector-ref="Active_MQ" doc:name="From publish client topic">
             <jms:transaction action="ALWAYS_BEGIN"/>
         </jms:inbound-endpoint>

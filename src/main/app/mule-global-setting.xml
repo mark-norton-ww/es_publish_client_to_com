@@ -6,10 +6,10 @@
 	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.5.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="
-http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd 
-http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd 
-http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 
 	<!-- Get properties from Global Environment Config, api.properties and api-override.properties -->
@@ -23,7 +23,7 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
          properties-ref="envConfigReader.properties" location="dummy"
          ignore-resource-not-found="true" ignore-unresolvable="true" order="1" />	
 	<context:property-placeholder location="classpath:api-override.properties" ignore-resource-not-found="true" ignore-unresolvable="true" order="2" />
-	<context:property-placeholder location="classpath:api.properties" ignore-resource-not-found="true" ignore-unresolvable="false" order="3" />
+	<context:property-placeholder location="classpath:api.properties" ignore-resource-not-found="true"  order="3" />
 
 	<spring:beans>
 		<!-- ActiveMQ Redelivery policy -->
@@ -56,8 +56,8 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 
 	<jms:activemq-connector name="Active_MQ"
 		username="${es.mule.activemq.username}" password="${es.mule.activemq.password}"
-		validateConnections="true" doc:name="Active MQ" clientId="${es.mule.activemq.publish-client-to-com.durableName}" 
-		durable="true" maxRedelivery="-1" numberOfConsumers="2" specification="1.1" connectionFactory-ref="amqFactory">
+		validateConnections="true" doc:name="Active MQ"  
+		 maxRedelivery="-1" numberOfConsumers="1" specification="1.1" connectionFactory-ref="amqFactory">
         <reconnect-forever frequency="10000"/>
     </jms:activemq-connector>
 
