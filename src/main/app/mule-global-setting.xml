@@ -40,7 +40,7 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 		<!-- ActiveMQ Connection factory -->
 		<spring:bean id="amqFactory"
 			class="org.apache.activemq.ActiveMQConnectionFactory" lazy-init="true" name="amqFactory">
-            <spring:property name="brokerURL" value="failover:(tcp://${es.mule.activemq.host}:${es.mule.activemq.port})"/>
+            <spring:property name="brokerURL" value="${es.mule.activemq.url}"/>
  			<spring:property name="redeliveryPolicy" ref="redeliveryPolicy"> </spring:property>			
 		</spring:bean>
 		

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <properties name="Template" version="12.2">
 	
-	<!--environment.global.config entries START-->
-	<property name="es.mule.activemq.host" value="" />
-	<property name="es.mule.activemq.port" value="" />
+
+	<property name="es.mule.activemq.url" value="" />
 	<property name="es.mule.activemq.username" value="" />
 	<property name="es.mule.activemq.password" value="" />
 
@@ -11,7 +10,5 @@
 	<property name="es.db.com.username" value="" />
 	<property name="es.db.com.password" value="" />
 
-		
-	<!--  value="" protected="true"-->
 
 </properties>
