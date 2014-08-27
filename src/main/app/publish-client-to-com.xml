@@ -69,8 +69,9 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 			doc:name="Map to SP parameters" />
 
         <db:stored-procedure config-ref="Oracle_Database_Configuration" transactionalAction="NOT_SUPPORTED" doc:name="Invoke Pkg_Admin_Program.p_insupd_corp_wellness">
-            <db:parameterized-query><![CDATA[call Pkg_Admin_Program.p_insupd_corp_wellness(#[p_corp_wellness_id],NULL,#[p_corprate_name],#[p_work_id],#[p_page],NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,1)]]></db:parameterized-query>
+            <db:parameterized-query><![CDATA[call Pkg_Admin_Program.p_insupd_corp_wellness(#[p_corp_wellness_id],#[p_corp_wellness_desc],#[p_corprate_name],#[p_work_id],#[p_page],NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,1)]]></db:parameterized-query>
             <db:in-param name="p_corp_wellness_id" type="INTEGER" value="#[flowVars['corp_wellness_id']]"/>
+            <db:in-param name="p_corp_wellness_desc" value="#[payload['p_corprate_name']]"/>
             <db:in-param name="p_corprate_name" value="#[payload['p_corprate_name']]"/>
             <db:in-param name="p_work_id" value="#[payload['p_work_id']]"/>
             <db:in-param name="p_page_id" value="#[payload['p_page_id']]"/>
