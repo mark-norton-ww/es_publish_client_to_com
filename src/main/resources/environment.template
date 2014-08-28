@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <properties name="Template" version="12.2">
 	
-
+	<property name="es.mule.sharedhttp.url" value="" />
+	<property name="es.mule.sharedhttp.transport" value="" />
+	
 	<property name="es.mule.activemq.url" value="" />
 	<property name="es.mule.activemq.username" value="" />
 	<property name="es.mule.activemq.password" value="" />
