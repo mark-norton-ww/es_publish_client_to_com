@@ -18,6 +18,13 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
+
+	<configuration doc:name="Configuration">  
+		<expression-language autoResolveVariables="false">    
+			<import class="org.mule.util.StringUtils" />
+		</expression-language>
+	</configuration>
+	    
 	
 	<db:generic-config name="Oracle_Database_Configuration" dataSource-ref="jdbcDataSource"		
 		doc:name="Generic Database Configuration"></db:generic-config>
@@ -64,20 +71,20 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 	
 	
 	<sub-flow name="callStoredProcedure" doc:name="callStoredProcedure">
-        <set-payload value="#[inputJson]" doc:name="Set original input" />
+        <set-payload value="#[flowVars['inputJson']]" doc:name="Set original input" />
         <data-mapper:transform config-ref="Proc_param_map"
 			doc:name="Map to SP parameters" />
 
         <db:stored-procedure config-ref="Oracle_Database_Configuration" transactionalAction="NOT_SUPPORTED" doc:name="Invoke Pkg_Admin_Program.p_insupd_corp_wellness">
             <db:parameterized-query><![CDATA[call Pkg_Admin_Program.p_insupd_corp_wellness(#[p_corp_wellness_id],#[p_corp_wellness_desc],#[p_corprate_name],#[p_work_id],#[p_page],NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,1)]]></db:parameterized-query>
             <db:in-param name="p_corp_wellness_id" type="INTEGER" value="#[flowVars['corp_wellness_id']]"/>
-            <db:in-param name="p_corp_wellness_desc" value="#[payload['p_corprate_name']]"/>
-            <db:in-param name="p_corprate_name" value="#[payload['p_corprate_name']]"/>
+            <db:in-param name="p_corp_wellness_desc" value="#[StringUtils.left(payload['p_corprate_name'], 200)]"/>
+            <db:in-param name="p_corprate_name" value="#[StringUtils.left(payload['p_corprate_name'], 200)]"/>
             <db:in-param name="p_work_id" value="#[payload['p_work_id']]"/>
-            <db:in-param name="p_page_id" value="#[payload['p_page_id']]"/>
+            <db:in-param name="p_page_id" value="#[StringUtils.left(payload['p_page_id'], 255)]"/>
 
         </db:stored-procedure>
-		<set-payload value="#[inputJson]" doc:name="Set original input" />        
+		<set-payload value="#[flowVars['inputJson']]" doc:name="Set original input" />        
         <logger message="[#[message.id]] Client sent to COM - ClientId: #[json:Client/ClientId]; Name: #[json:Client/ClientName];" level="INFO" category="audit.publish-client-to-com" doc:name="AUDIT: Success"/>
 	</sub-flow>
 </mule>
