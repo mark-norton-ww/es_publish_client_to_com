@@ -40,7 +40,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         </jms:inbound-endpoint>
         <set-variable variableName="inputJson" value="#[payload]"
 			doc:name="Store original input"></set-variable>
-        <logger message="[#[message.id]] Client received: #[json:Client/ClientId]" level="INFO" doc:name="Received"/>
+        <logger message="[#[message.id]] Client received: #[json:Client/ClientId]" level="INFO" category="audit.publish-client-to-com" doc:name="AUDIT: Received"/>
 
 		<flow-ref name="getClientIdFromCom" doc:name="Prepare Data for Stored Procedure"></flow-ref>
 		<flow-ref name="callStoredProcedure" doc:name="Call Stored Procedure"></flow-ref>
