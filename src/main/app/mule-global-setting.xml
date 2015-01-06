@@ -67,8 +67,8 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 
 	<flow name="admin-status" doc:name="admin-status" initialState="started" >
      <http:inbound-endpoint address="${es.mule.sharedhttp.transport}://${es.mule.sharedhttp.url}/${es.mule.publish-client-to-com.admin.url}" doc:name="adminStatus"  contentType="application/json" exchange-pattern="request-response" connector-ref="SharedHttp" />
-     <set-payload doc:name="adminPayload" name="adminPayload" value="#[['status': 'OK', 'message':'Publish Client to COM deployed', 'host': server.host,  'clusterNode': mule.nodeId, 'locale': server.locale, 'appName': app.name]]"   />
-     <json:object-to-json-transformer doc:name="Object to JSON"/>     
+     <set-payload doc:name="adminPayload" name="adminPayload" value="{ &quot;status&quot; : &quot;OK&quot;, &quot;message&quot; : &quot;Publish Client to COM service is available&quot;, &quot;host&quot; : &quot;#[server.host]&quot;, &quot;locale&quot; : &quot;#[server.locale]&quot;, &quot;appName&quot; : &quot;#[app.name]&quot;, &quot;flowName&quot; : &quot;admin-status&quot;,&quot;version&quot; : &quot;${service.version}&quot; }" />
+	 <json:object-to-json-transformer doc:name="Object to JSON"/>     
     </flow>
 
 </mule>

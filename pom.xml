@@ -36,8 +36,19 @@
             <resource>
                 <directory>src/main/api</directory>
             </resource>
+			<resource>
+       <filtering>true</filtering>
+       <directory>src/main/resources</directory>
+             <includes>
+                   <include>**/api.properties</include>
+             </includes>
+     </resource>
             <resource>
+			    <filtering>false</filtering>
                 <directory>src/main/resources</directory>
+				<includes>
+                  <include>**/*</include>
+             </includes>
             </resource>
         </resources>
        	<!--
