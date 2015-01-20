@@ -1,0 +1,90 @@
+<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:jdbc-ee="http://www.mulesoft.org/schema/mule/ee/jdbc"
+	xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper"
+	xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+	xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.5.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"	
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.mulesoft.org/schema/mule/ee/jdbc http://www.mulesoft.org/schema/mule/ee/jdbc/current/mule-jdbc-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+
+
+	<configuration doc:name="Configuration">  
+		<expression-language autoResolveVariables="false">    
+			<import class="org.mule.util.StringUtils" />
+		</expression-language>
+	</configuration>
+	    
+	
+	<db:generic-config name="Oracle_Database_Configuration" dataSource-ref="jdbcDataSource"		
+		doc:name="Generic Database Configuration"></db:generic-config>
+
+	<data-mapper:config name="Proc_param_map"
+		transformationGraphPath="json_to_map_1.grf" doc:name="Proc_param_map" />
+		
+	<flow name="publishClientToComFlow" doc:name="publishClientToComFlow"
+		processingStrategy="synchronous">
+		<jms:inbound-endpoint queue="${es.mule.activemq.publish-client-to-com.queueName}"
+			connector-ref="Active_MQ" doc:name="From publish client topic">
+            <jms:transaction action="ALWAYS_BEGIN"/>
+        </jms:inbound-endpoint>
+        <set-variable variableName="inputJson" value="#[payload]"
+			doc:name="Store original input"></set-variable>
+        <logger message="[#[message.id]] Client received: #[json:Client/ClientId]" level="INFO" category="audit.publish-client-to-com" doc:name="AUDIT: Received"/>
+
+		<flow-ref name="getClientIdFromCom" doc:name="Prepare Data for Stored Procedure"></flow-ref>
+		<flow-ref name="callStoredProcedure" doc:name="Call Stored Procedure"></flow-ref>
+
+        <choice-exception-strategy doc:name="Choice Exception Strategy">
+            <rollback-exception-strategy doc:name="Rollback Exception Strategy" when="#[exception.getCauseException().toString().toLowerCase().contains('cannot get connection')]">
+                <logger message="[#[message.id]] Connection error - message will be retried. #[exception]" level="WARN" doc:name="CONN: Retry" category="connection.publish-client-to-com"/>
+            </rollback-exception-strategy>        
+            <catch-exception-strategy doc:name="Catch Exception Strategy">
+                <set-payload value="#[flowVars[&quot;inputJson&quot;]]" doc:name="Original input"/>
+                <remove-variable variableName="*" doc:name="Clear variables"/>
+                <logger message="[#[message.id]] #[payload]" level="ERROR" category="secure.publish-client-to-com" doc:name="SECURE: input"/>
+                <logger message="[#[message.id]] Failed to send client to COM - ClientId: #[json:Client/ClientId]; Name: #[json:Client/ClientName]; Error: #[exception.getMessage()]; " level="ERROR" doc:name="AUDIT: Failed" category="audit.publish-client-to-com"/>               
+            </catch-exception-strategy>
+        </choice-exception-strategy>
+	</flow>
+	
+	
+	<sub-flow name="getClientIdFromCom" doc:name="getClientIdFromCom">
+        <db:select config-ref="Oracle_Database_Configuration" doc:name="Checks Client Id Exists Or Not" transactionalAction="NOT_SUPPORTED">
+            <db:parameterized-query><![CDATA[select corp_wellness_id from CORP_WELLNESS where work_id=#[json:Client/ClientId]]]></db:parameterized-query>
+
+        </db:select>
+		<set-variable variableName="corp_wellness_id"
+			value="#[payload.size() &gt; 0 ? payload[0]['corp_wellness_id'] : null]"
+			doc:name="Store corp_wellness_id" />
+	</sub-flow>
+	
+	
+	<sub-flow name="callStoredProcedure" doc:name="callStoredProcedure">
+        <set-payload value="#[flowVars['inputJson']]" doc:name="Set original input" />
+        <data-mapper:transform config-ref="Proc_param_map"
+			doc:name="Map to SP parameters" />
+
+        <db:stored-procedure config-ref="Oracle_Database_Configuration" transactionalAction="NOT_SUPPORTED" doc:name="Invoke Pkg_Admin_Program.p_insupd_corp_wellness">
+            <db:parameterized-query><![CDATA[call Pkg_Admin_Program.p_insupd_corp_wellness(#[p_corp_wellness_id],#[p_corp_wellness_desc],#[p_corprate_name],#[p_work_id],#[p_page],NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,1)]]></db:parameterized-query>
+            <db:in-param name="p_corp_wellness_id" type="INTEGER" value="#[flowVars['corp_wellness_id']]"/>
+            <db:in-param name="p_corp_wellness_desc" value="#[StringUtils.left(payload['p_corprate_name'], 200)]"/>
+            <db:in-param name="p_corprate_name" value="#[StringUtils.left(payload['p_corprate_name'], 200)]"/>
+            <db:in-param name="p_work_id" value="#[payload['p_work_id']]"/>
+            <db:in-param name="p_page_id" value="#[StringUtils.left(payload['p_page_id'], 255)]"/>
+
+        </db:stored-procedure>
+		<set-payload value="#[flowVars['inputJson']]" doc:name="Set original input" />        
+        <logger message="[#[message.id]] Client sent to COM - ClientId: #[json:Client/ClientId]; Name: #[json:Client/ClientName];" level="INFO" category="audit.publish-client-to-com" doc:name="AUDIT: Success"/>
+	</sub-flow>
+</mule>
