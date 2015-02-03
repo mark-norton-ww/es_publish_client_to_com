@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.weightwatchers.es</groupId>
     <artifactId>publish-client-to-com</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <packaging>mule</packaging>
     <name>publish-client-to-com</name>
 
@@ -36,8 +36,19 @@
             <resource>
                 <directory>src/main/api</directory>
             </resource>
+			<resource>
+       <filtering>true</filtering>
+       <directory>src/main/resources</directory>
+             <includes>
+                   <include>**/api.properties</include>
+             </includes>
+     </resource>
             <resource>
+			    <filtering>false</filtering>
                 <directory>src/main/resources</directory>
+				<includes>
+                  <include>**/*</include>
+             </includes>
             </resource>
         </resources>
        	<!--
