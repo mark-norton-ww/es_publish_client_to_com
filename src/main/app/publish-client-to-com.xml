@@ -54,6 +54,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                 <remove-variable variableName="*" doc:name="Clear variables"/>
                 <logger message="[#[message.id]] #[payload]" level="ERROR" category="secure.publish-client-to-com" doc:name="SECURE: input"/>
                 <logger message="[#[message.id]] Failed to send client to COM - ClientId: #[json:Client/ClientId]; Name: #[json:Client/ClientName]; Error: #[exception.getMessage()]; " level="ERROR" doc:name="AUDIT: Failed" category="audit.publish-client-to-com"/>               
+                <logger message="es_publish_client_to_com_DB_10000 [#[message.id]] Failed to send client to COM - ClientId: #[json:Client/ClientId]; Name: #[json:Client/ClientName]; Error: #[exception.getMessage()]; " level="ERROR" doc:name="ERROR: Failed" category="app.publish-client-to-com"/>
             </catch-exception-strategy>
         </choice-exception-strategy>
 	</flow>
