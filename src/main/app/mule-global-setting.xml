@@ -18,17 +18,10 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 
 	<!-- Get properties from Global Environment Config, api.properties and api-override.properties -->
 	<spring:beans>
-	    <spring:import resource="classpath*:environment-loader-config.xml" />
-	    <spring:bean id="envConfigReader.properties" factory-bean="envConfigReader"
-	        factory-method="loadProperties" />
+	    <spring:import resource="classpath*:environment-loader-config-v2.xml" />
 	</spring:beans>
  
-  	<context:property-placeholder
-         properties-ref="envConfigReader.properties" location="dummy"
-         ignore-resource-not-found="true" ignore-unresolvable="true" order="1" />	
-	<context:property-placeholder location="classpath:api-override.properties" ignore-resource-not-found="true" ignore-unresolvable="true" order="2" />
-	<context:property-placeholder location="classpath:api.properties" ignore-resource-not-found="true"  order="3" />
-
+  	
 	<spring:beans>
 		<!-- ActiveMQ Redelivery policy -->
 		<spring:bean id="redeliveryPolicy" name="redeliveryPolicy"
@@ -66,7 +59,8 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
     </jms:activemq-connector>
 
 	<flow name="admin-status" doc:name="admin-status" initialState="started" >
-     <http:inbound-endpoint address="${es.mule.sharedhttp.transport}://${es.mule.sharedhttp.url}/${es.mule.publish-client-to-com.admin.url}" doc:name="adminStatus"  contentType="application/json" exchange-pattern="request-response" connector-ref="SharedHttp" />
+	<http:listener config-ref="SharedHttpListenerConfig" path="${es.mule.publish-client-to-com.admin.url}/*" doc:name="HTTP"/>
+     
      <set-payload doc:name="adminPayload" name="adminPayload" value="{ &quot;status&quot; : &quot;OK&quot;, &quot;message&quot; : &quot;Publish Client to COM service is available&quot;, &quot;host&quot; : &quot;#[server.host]&quot;, &quot;locale&quot; : &quot;#[server.locale]&quot;, &quot;appName&quot; : &quot;#[app.name]&quot;, &quot;flowName&quot; : &quot;admin-status&quot;,&quot;version&quot; : &quot;${service.version}&quot; }" />
 	 <json:object-to-json-transformer doc:name="Object to JSON"/>     
     </flow>
