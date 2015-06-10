@@ -17,7 +17,7 @@
 		log4j.appender.appLog.layout.ConversionPattern=%-5p %d [%t] %c: %m%n
 		log4j.appender.appLog.File=${mule.home}/logs/app/profile.log
   	 	-->
-        <RollingFile name="RollingFile-appLog" fileName="${mule.home}/logs/app/profile.log" filePattern="${mule.home}/logs/app/profile-%d{yyyy-MM-dd}-%i.log" >
+        <RollingFile name="RollingFile-appLog" fileName="${mule.home}/logs/app/publish-client-to-com.log" filePattern="${mule.home}/logs/app/publish-client-to-com-%d{yyyy-MM-dd}-%i.log" >
 			<PatternLayout>
 				<pattern>%-5p %d [%t] %c: %m%n</pattern>
 			</PatternLayout>
@@ -33,7 +33,7 @@
 		log4j.appender.connectionLog.layout.ConversionPattern=%-5p %d %c{1}: %m%n
 		log4j.appender.connectionLog.File=${mule.home}/logs/conn/profile.log
 		-->
-		<RollingFile name="RollingFile-connectionLog" fileName="${mule.home}/logs/conn/profile.log" filePattern="${mule.home}/logs/conn/profile-%d{yyyy-MM-dd}-%i.log" >
+		<RollingFile name="RollingFile-connectionLog" fileName="${mule.home}/logs/conn/publish-client-to-com.log" filePattern="${mule.home}/logs/conn/publish-client-to-com-%d{yyyy-MM-dd}-%i.log" >
 			<PatternLayout>
 				<pattern>%-5p %d [%t] %c: %m%n</pattern>
 			</PatternLayout>
@@ -49,7 +49,7 @@
 		log4j.appender.auditLog.layout.ConversionPattern=%-5p %d %c{1}: %m%n
 		log4j.appender.auditLog.File=${mule.home}/logs/audit/profile.log
 		-->
-		<RollingFile name="RollingFile-auditLog" fileName="${mule.home}/logs/audit/profile.log" filePattern="${mule.home}/logs/audit/profile-%d{yyyy-MM-dd}-%i.log" >
+		<RollingFile name="RollingFile-auditLog" fileName="${mule.home}/logs/audit/publish-client-to-com.log" filePattern="${mule.home}/logs/audit/publish-client-to-com-%d{yyyy-MM-dd}-%i.log" >
 			<PatternLayout>
 				<pattern>%-5p %d [%t] %c: %m%n</pattern>
 			</PatternLayout>
@@ -65,7 +65,7 @@
 		log4j.appender.secureLog.layout.ConversionPattern=%-5p %d %c{1}: %m%n
 		log4j.appender.secureLog.File=${mule.home}/logs/secure/profile.log
 		-->
-		<RollingFile name="RollingFile-secureLog" fileName="${mule.home}/logs/secure/profile.log" filePattern="${mule.home}/logs/secure/profile-%d{yyyy-MM-dd}-%i.log" >
+		<RollingFile name="RollingFile-secureLog" fileName="${mule.home}/logs/secure/publish-client-to-com.log" filePattern="${mule.home}/logs/secure/publish-client-to-com-%d{yyyy-MM-dd}-%i.log" >
 			<PatternLayout>
 				<pattern>%-5p %d [%t] %c: %m%n</pattern>
 			</PatternLayout>
