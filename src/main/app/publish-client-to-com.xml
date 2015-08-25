@@ -6,10 +6,10 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.5.0"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.6.1"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"	
-	xsi:schemaLocation="
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
 http://www.mulesoft.org/schema/mule/ee/jdbc http://www.mulesoft.org/schema/mule/ee/jdbc/current/mule-jdbc-ee.xsd
@@ -34,7 +34,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 	<data-mapper:config name="Proc_param_map"
 		transformationGraphPath="json_to_map_1.grf" doc:name="Proc_param_map" />
 		
-	<flow name="publishClientToComFlow" doc:name="publishClientToComFlow"
+	<flow name="publishClientToComFlow" 
 		processingStrategy="synchronous">
 		<jms:inbound-endpoint queue="${es.mule.activemq.publish-client-to-com.queueName}"
 			connector-ref="Active_MQ" doc:name="From publish client topic">
@@ -43,23 +43,15 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <set-variable variableName="inputJson" value="#[payload]"
 			doc:name="Store original input"></set-variable>
 		
-		<json:json-to-object-transformer returnClass="java.util.HashMap" />
+		<json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
 	      <set-variable value="#[payload.?Client.?ClientId]" variableName="clientIdVar" doc:name="Variable" />
 	      <set-variable value="#[payload.?Client.?ClientName]" variableName="clientNameVar" doc:name="Variable" />
-        <json:object-to-json-transformer />
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
        	
         <logger message="[#[message.id]] Client received: #[flowVars['clientIdVar']]" level="INFO" category="audit.publish-client-to-com" doc:name="AUDIT: Received"/>
 		<flow-ref name="getClientIdFromCom" doc:name="Prepare Data for Stored Procedure"></flow-ref>
-		<choice>
-		  <when expression="#[flowVars['corp_wellness_id'] != null ]">
-		       <flow-ref name="callStoredProcedure" doc:name="Call Stored Procedure"></flow-ref>     
-		  </when>
-		  <otherwise>
-		       <logger level="ERROR" message="[#[message.id]]. Unable to retrieve the Corp_Wellness_ID for the clientID #[flowVars['clientIdVar']]. Please Check if ERP publish was successfull." category="app.publish-client-to-com"/>
-		  </otherwise>
-		</choice>
+		<flow-ref name="callStoredProcedure" doc:name="Call Stored Procedure"></flow-ref>     
 		
-
         <choice-exception-strategy doc:name="Choice Exception Strategy">
             <rollback-exception-strategy doc:name="Rollback Exception Strategy" when="#[exception.getCauseException().toString().toLowerCase().contains('cannot get connection')]">
                 <logger message="[#[message.id]] Connection error - message will be retried. #[exception]" level="WARN" doc:name="CONN: Retry" category="connection.publish-client-to-com"/>
@@ -75,7 +67,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 	</flow>
 	
 	
-	<sub-flow name="getClientIdFromCom" doc:name="getClientIdFromCom">
+	<sub-flow name="getClientIdFromCom" >
 	    <db:select config-ref="Oracle_Database_Configuration" doc:name="Checks Client Id Exists Or Not" transactionalAction="NOT_SUPPORTED">
             <db:parameterized-query><![CDATA[select corp_wellness_id from CORP_WELLNESS where work_id=#[flowVars['clientIdVar']]]]></db:parameterized-query>
         </db:select>
@@ -85,12 +77,12 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 	</sub-flow>
 	
 	
-	<sub-flow name="callStoredProcedure" doc:name="callStoredProcedure">
+	<sub-flow name="callStoredProcedure" >
         <set-payload value="#[flowVars['inputJson']]" doc:name="Set original input" />
         <data-mapper:transform config-ref="Proc_param_map" doc:name="Map to SP parameters" />
-
+        
         <db:stored-procedure config-ref="Oracle_Database_Configuration" transactionalAction="NOT_SUPPORTED" doc:name="Invoke Pkg_Admin_Program.p_insupd_corp_wellness">
-            <db:parameterized-query><![CDATA[call Pkg_Admin_Program.p_insupd_corp_wellness(#[p_corp_wellness_id],#[p_corp_wellness_desc],#[p_corprate_name],#[p_work_id],#[p_page],NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,1)]]></db:parameterized-query>
+            <db:parameterized-query><![CDATA[{call Pkg_Admin_Program.p_insupd_corp_wellness(:p_corp_wellness_id,:p_corp_wellness_desc,:p_corprate_name,:p_work_id,:p_page_id,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,1)}]]></db:parameterized-query>
             <db:in-param name="p_corp_wellness_id" type="INTEGER" value="#[flowVars['corp_wellness_id']]"/>
             <db:in-param name="p_corp_wellness_desc" value="#[StringUtils.left(payload['p_corprate_name'], 200)]"/>
             <db:in-param name="p_corprate_name" value="#[StringUtils.left(payload['p_corprate_name'], 200)]"/>
@@ -100,5 +92,43 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 		<set-payload value="#[flowVars['inputJson']]" doc:name="Set original input" />        
         <logger message="[#[message.id]] Client sent to COM - ClientId: #[flowVars['clientIdVar']]; Name: #[flowVars['clientNameVar']];" level="INFO" category="audit.publish-client-to-com" doc:name="AUDIT: Success"/>
 	</sub-flow>
+	
+	
+	<!-- <flow name="testFlow">
+	    
+	    <http:inbound-endpoint address="/testComFlow" contentType="application/json" connector-ref="SharedHttpListenerConfig" method="POST"/>
+	    <http:listener config-ref="SharedHttpListenerConfig" path="/testComFlow/*" doc:name="HTTP" />
+	    
+	    <logger message="*********00000000000 ************8   #[payload]" level="ERROR" category="app.publish-client-to-com" doc:name="Logger"/>
+	    <object-to-string-transformer doc:name="Object to String"/>
+	    <set-variable variableName="inputJson" value="#[payload]" doc:name="Store original input"></set-variable>
+		
+		<json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
+	      <set-variable value="#[payload.?Client.?ClientId]" variableName="clientIdVar" doc:name="Variable" />
+	      <set-variable value="#[payload.?Client.?ClientName]" variableName="clientNameVar" doc:name="Variable" />
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+       	
+        <logger message="[#[message.id]] Client received: #[flowVars['clientIdVar']]" level="INFO" category="audit.publish-client-to-com" doc:name="AUDIT: Received"/>
+		<logger message="*********1111111 ************8   #[payload]" level="ERROR" category="app.publish-client-to-com" doc:name="Logger"/>
+		<flow-ref name="getClientIdFromCom" doc:name="Prepare Data for Stored Procedure"></flow-ref>
+		<logger message="*********22222222************8   #[flowVars['corp_wellness_id']]  #[payload]" level="ERROR" category="app.publish-client-to-com" doc:name="Logger"/>
+		<flow-ref name="callStoredProcedure" doc:name="Call Stored Procedure"></flow-ref>  
+		<logger message="*********3333333333************8  #[flowVars['corp_wellness_id']]  #[payload]" level="ERROR" category="app.publish-client-to-com" doc:name="Logger"/>
+		
+		<choice-exception-strategy doc:name="Choice Exception Strategy">
+            <rollback-exception-strategy doc:name="Rollback Exception Strategy" when="#[exception.getCauseException().toString().toLowerCase().contains('cannot get connection')]">
+                <logger message="[#[message.id]] Connection error - message will be retried. #[exception]" level="WARN" doc:name="CONN: Retry" category="connection.publish-client-to-com"/>
+            </rollback-exception-strategy>        
+            <catch-exception-strategy doc:name="Catch Exception Strategy">
+                <set-payload value="#[flowVars['inputJson']]" doc:name="Original input"/>
+                <remove-variable variableName="*" doc:name="Clear variables"/>
+                <logger message="[#[message.id]] #[payload]" level="ERROR" category="secure.publish-client-to-com" doc:name="SECURE: input"/>
+                <logger message="[#[message.id]] Failed to send client to COM - ClientId: #[flowVars['clientIdVar']]; Name: #[flowVars['clientNameVar']]; Error: #[exception.getMessage()]; " level="ERROR" doc:name="AUDIT: Failed" category="audit.publish-client-to-com"/>               
+                <logger message="es_publish_client_to_com_DB_10000 [#[message.id]] Failed to send client to COM - ClientId: #[flowVars['clientIdVar']]; Name: #[flowVars['clientNameVar']]; Error: #[exception.getMessage()]; " level="ERROR" doc:name="ERROR: Failed" category="app.publish-client-to-com"/>
+            </catch-exception-strategy>
+        </choice-exception-strategy>
+        
+	</flow> 
+	 -->
 	
 </mule>
