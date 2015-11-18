@@ -1,0 +1,8 @@
+{ "status": "OK","message": "WFM to IVR Service Deployed","host": "#[server.host]","clusterNode":#[mule.nodeId] ,"locale": "#[server.locale]","appName": "#[app.name]","flowName": "admin-status",
+  "version": "#[flowVars['ServiceVersion']]",
+  "Resource":[
+   { "Database Connection": "#[flowVars['DBStatus']]"},
+   {"ActiveMQ  Connection": "#[flowVars['activeMQStatus']]"}
+   ]
+}
+

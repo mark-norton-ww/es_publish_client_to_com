@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:json="http://www.mulesoft.org/schema/mule/json"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+    
+    
+    
+    
+    <flow name="admin-status"  initialState="started" >
+	<http:listener config-ref="SharedHttpListenerConfig" path="${es.mule.publish-client-to-com.admin.url}/*" doc:name="HTTP"/>
+     
+
+ <set-variable variableName="DBStatus" value="Resource configured from key 'es.db.com.url' could not be connected to with value  '${es.db.com.url}' " doc:name="DBStatus"/>
+        <flow-ref name="check-database-connection" doc:name="check-database-connection"/>
+        <flow-ref name="check-queue-connection" doc:name="check-queue-connection"/>
+    
+ <set-variable variableName="ServiceVersion" value="${service.version}" doc:name="ServiceVersion"/>
+        <parse-template location="payloadtemplate.json" doc:name="Parse Template"/>
+
+ <set-variable variableName="activeMQStatus" value="Resource configured from key 'es.mule.activemq.url' could not be connected to with value  '${es.mule.activemq.url}' " doc:name="activeMQStatus"/>
+        <parse-template location="payloadtemplate.json" doc:name="Parse Template"/>
+
+
+
+
+    </flow>
+    
+      
+    
+    
+     <flow name="check-database-connection">
+       <db:select config-ref="Oracle_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select sysdate from dual]]></db:parameterized-query>
+
+
+        </db:select>
+        <set-variable variableName="DBStatus" value="Available"  doc:name="DBStatus" />
+          <catch-exception-strategy doc:name="Catch Exception Strategy" >
+      
+           
+           <logger message=" [#[message.id]] Publish client to com  failed with error: #[exception.getMessage()]; " level="ERROR" doc:name="ERROR: Failed" />
+             
+           </catch-exception-strategy>
+   </flow>
+  
+    
+    
+     <flow name="check-queue-connection" >
+  <set-variable variableName="connectivity-test" value="ActiveMQ" doc:name="set-connectivity-test" /> 
+  <set-payload value="test message" doc:name="set-test-payload"/>
+  <jms:outbound-endpoint connector-ref="Active_MQ" topic="admin-connectivity-test" doc:name="check-jms-connectivity" />
+  <set-payload value="#[null]" doc:name="remove-test-payload"/>
+  <set-variable variableName="activeMQStatus" value="Available" doc:name="activeMQStatus"/>
+   
+  <catch-exception-strategy doc:name="Catch Exception Strategy" >
+             <logger message=" [#[message.id]] Publish Client to com  failed with error: #[exception.getMessage()]; " level="ERROR" doc:name="ERROR: Failed" category="audit.publish-client-service"/>
+        </catch-exception-strategy>   
+ </flow>
+    
+    
+    
+</mule>
