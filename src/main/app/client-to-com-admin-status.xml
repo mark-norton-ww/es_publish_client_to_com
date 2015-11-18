@@ -18,54 +18,40 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
     
     
     <flow name="admin-status"  initialState="started" >
-	<http:listener config-ref="SharedHttpListenerConfig" path="${es.mule.publish-client-to-com.admin.url}/*" doc:name="HTTP"/>
+		<http:listener config-ref="SharedHttpListenerConfig" path="${es.mule.publish-client-to-com.admin.url}/*" doc:name="HTTP"/>
      
-
- <set-variable variableName="DBStatus" value="Resource configured from key 'es.db.com.url' could not be connected to with value  '${es.db.com.url}' " doc:name="DBStatus"/>
+ 		<set-variable variableName="DBStatus" value="Resource configured from key 'es.db.com.url' could not be connected to with value  '${es.db.com.url}' " doc:name="DBStatus"/>
+  		<set-variable variableName="activeMQStatus" value="Resource configured from key 'es.mule.activemq.url' could not be connected to with value  '${es.mule.activemq.url}' " doc:name="activeMQStatus"/>
+        <set-variable variableName="ServiceVersion" value="${service.version}" doc:name="ServiceVersion"/>
+        
         <flow-ref name="check-database-connection" doc:name="check-database-connection"/>
         <flow-ref name="check-queue-connection" doc:name="check-queue-connection"/>
     
- <set-variable variableName="ServiceVersion" value="${service.version}" doc:name="ServiceVersion"/>
         <parse-template location="payloadtemplate.json" doc:name="Parse Template"/>
-
- <set-variable variableName="activeMQStatus" value="Resource configured from key 'es.mule.activemq.url' could not be connected to with value  '${es.mule.activemq.url}' " doc:name="activeMQStatus"/>
-        <parse-template location="payloadtemplate.json" doc:name="Parse Template"/>
-
-
-
 
     </flow>
-    
-      
-    
-    
+            
      <flow name="check-database-connection">
        <db:select config-ref="Oracle_Database_Configuration" doc:name="Database">
             <db:parameterized-query><![CDATA[select sysdate from dual]]></db:parameterized-query>
 
-
         </db:select>
         <set-variable variableName="DBStatus" value="Available"  doc:name="DBStatus" />
-          <catch-exception-strategy doc:name="Catch Exception Strategy" >
-      
-           
-           <logger message=" [#[message.id]] Publish client to com  failed with error: #[exception.getMessage()]; " level="ERROR" doc:name="ERROR: Failed" />
-             
-           </catch-exception-strategy>
+          <catch-exception-strategy doc:name="Catch Exception Strategy" >     
+           <logger message=" [#[message.id]] Publish client to com  failed with error: #[exception.getMessage()]; " level="ERROR" doc:name="ERROR: Failed" />           
+        </catch-exception-strategy>
    </flow>
-  
-    
-    
-     <flow name="check-queue-connection" >
-  <set-variable variableName="connectivity-test" value="ActiveMQ" doc:name="set-connectivity-test" /> 
-  <set-payload value="test message" doc:name="set-test-payload"/>
-  <jms:outbound-endpoint connector-ref="Active_MQ" topic="admin-connectivity-test" doc:name="check-jms-connectivity" />
-  <set-payload value="#[null]" doc:name="remove-test-payload"/>
-  <set-variable variableName="activeMQStatus" value="Available" doc:name="activeMQStatus"/>
-   
-  <catch-exception-strategy doc:name="Catch Exception Strategy" >
-             <logger message=" [#[message.id]] Publish Client to com  failed with error: #[exception.getMessage()]; " level="ERROR" doc:name="ERROR: Failed" category="audit.publish-client-service"/>
-        </catch-exception-strategy>   
+     
+    <flow name="check-queue-connection" >
+	  <set-variable variableName="connectivity-test" value="ActiveMQ" doc:name="set-connectivity-test" /> 
+	  <set-payload value="test message" doc:name="set-test-payload"/>
+	  <jms:outbound-endpoint connector-ref="Active_MQ" topic="admin-connectivity-test" doc:name="check-jms-connectivity" />
+	  <set-payload value="#[null]" doc:name="remove-test-payload"/>
+	  <set-variable variableName="activeMQStatus" value="Available" doc:name="activeMQStatus"/>
+	   
+	  <catch-exception-strategy doc:name="Catch Exception Strategy" >
+	             <logger message=" [#[message.id]] Publish Client to com  failed with error: #[exception.getMessage()]; " level="ERROR" doc:name="ERROR: Failed" category="audit.publish-client-to-com"/>
+	 </catch-exception-strategy>   
  </flow>
     
     
