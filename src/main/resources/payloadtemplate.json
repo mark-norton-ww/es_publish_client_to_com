@@ -1,4 +1,4 @@
-{ "status": "OK","message": "WFM to IVR Service Deployed","host": "#[server.host]","clusterNode":#[mule.nodeId] ,"locale": "#[server.locale]","appName": "#[app.name]","flowName": "admin-status",
+{ "status": "OK","message": "client-to-com  Service Deployed","host": "#[server.host]","clusterNode":#[mule.nodeId] ,"locale": "#[server.locale]","appName": "#[app.name]","flowName": "admin-status",
   "version": "#[flowVars['ServiceVersion']]",
   "Resource":[
    { "Database Connection": "#[flowVars['DBStatus']]"},
