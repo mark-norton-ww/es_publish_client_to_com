@@ -18,7 +18,7 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
     
     
     <flow name="admin-status"  initialState="started" >
-		<http:listener config-ref="SharedHttpListenerConfig" path="${es.mule.publish-client-to-com.admin.url}/*" doc:name="HTTP"/>
+		<http:listener config-ref="SharedHttpsListenerConfig" path="${es.mule.publish-client-to-com.admin.url}/*" doc:name="HTTPS"/>
      
  		<set-variable variableName="DBStatus" value="Resource configured from key 'es.db.com.url' could not be connected to with value  '${es.db.com.url}' " doc:name="DBStatus"/>
   		<set-variable variableName="activeMQStatus" value="Resource configured from key 'es.mule.activemq.url' could not be connected to with value  '${es.mule.activemq.url}' " doc:name="activeMQStatus"/>
