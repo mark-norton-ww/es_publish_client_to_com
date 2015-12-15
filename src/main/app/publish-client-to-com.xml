@@ -6,7 +6,7 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.6.1"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"	
 	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
@@ -44,8 +44,8 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 			doc:name="Store original input"></set-variable>
 		
 		<json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
-	      <set-variable value="#[payload.?Client.?ClientId]" variableName="clientIdVar" doc:name="Variable" />
-	      <set-variable value="#[payload.?Client.?ClientName]" variableName="clientNameVar" doc:name="Variable" />
+	      <set-variable value="#[payload.?Client.?ClientId]" variableName="clientIdVar" doc:name="clientIdVar" />
+	      <set-variable value="#[payload.?Client.?ClientName]" variableName="clientNameVar" doc:name="clientNameVar" />
         <json:object-to-json-transformer doc:name="Object to JSON"/>
        	
         <logger message="[#[message.id]] Client received: #[flowVars['clientIdVar']]" level="INFO" category="audit.publish-client-to-com" doc:name="AUDIT: Received"/>
@@ -73,7 +73,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         </db:select>
 		<set-variable variableName="corp_wellness_id"
 			value="#[payload.size() &gt; 0 ? payload[0]['corp_wellness_id'] : null]"
-			doc:name="Store corp_wellness_id" />
+			doc:name="corp_wellness_id" />
 	</sub-flow>
 	
 	
